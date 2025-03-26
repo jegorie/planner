@@ -6,7 +6,7 @@
 
 body {
   @apply m-0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -14,7 +14,7 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: Inter, source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -159,6 +159,7 @@ code {
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  /* Custon */
   --color-blue-card: var(--blue-card);
   --color-blue-card-foreground: var(--blue-card-bg);
   --color-blue-card-action: var(--blue-card-action);
@@ -174,6 +175,27 @@ code {
   --color-purple-card: var(--purple-card);
   --color-purple-card-foreground: var(--purple-card-bg);
   --color-purple-card-action: var(--purple-card-action);
+
+
+  /* Animations */
+  --animate-show-up: show-up 1s ease-in-out;
+
+  @keyframes show-up {
+
+    0% {
+      height: 0%;
+      opacity: 0;
+    }
+
+    50% {
+      height: 50%;
+      opacity: 1;
+    }
+
+    100% {
+      height: 100%;
+    }
+  }
 }
 
 @layer base {

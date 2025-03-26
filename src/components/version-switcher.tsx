@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Check, ChevronsUpDown, GalleryVerticalEnd } from "lucide-react";
 
 import {
@@ -18,7 +17,7 @@ type Props = {
   apps: string[];
 };
 
-export function VersionSwitcher({ apps }: Props) {
+export function AppSwitcher({ apps }: Props) {
   const {
     location: { pathname },
   } = useRouterState();

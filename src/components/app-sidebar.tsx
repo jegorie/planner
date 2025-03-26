@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 import { SearchForm } from "@/components/search-form";
-import { VersionSwitcher } from "@/components/version-switcher";
+import { AppSwitcher } from "@/components/version-switcher";
 import {
   Collapsible,
   CollapsibleContent,
@@ -34,11 +34,11 @@ const data = {
   apps: ["planner"],
   navMain: [
     {
-      title: "Getting Started",
+      title: "Home project",
       url: "#",
       items: [
         {
-          title: "Installation",
+          title: "Introduction",
           url: "#",
           isActive: true,
         },
@@ -49,7 +49,7 @@ const data = {
       ],
     },
     {
-      title: "Building Your Application",
+      title: "Team project",
       url: "#",
       items: [
         {
@@ -70,34 +70,6 @@ const data = {
         },
         {
           title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
           url: "#",
         },
       ],
@@ -157,7 +129,7 @@ const Item = ({
   return (
     <div
       className={cn(
-        "p-2 rounded-sm font-bold cursor-pointer transition-colors hover:shadow",
+        "p-2 rounded-sm font-bold text-sm cursor-pointer transition-colors hover:shadow",
         colorsMap[color],
       )}
     >
@@ -171,7 +143,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <VersionSwitcher apps={data.apps} />
+        <AppSwitcher apps={data.apps} />
       </SidebarHeader>
       <SidebarContent className="gap-0">
         <SidebarGroup className="grid grid-cols-2 grid-rows-2 w-full gap-2">
@@ -181,7 +153,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
         <ModeToggle />
         {/* <SearchForm /> */}
-        {/* We create a collapsible SidebarGroup for each parent. */}
         {data.navMain.map((item) => (
           <Collapsible
             key={item.title}
