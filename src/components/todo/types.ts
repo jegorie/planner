@@ -55,6 +55,7 @@ export type Schedule = {
 
 export type Task = {
     id: string;
+    checked: boolean;
     title: string;
     desc: string;
     schedule?: Schedule;

@@ -16,9 +16,10 @@ import {
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
-import { useAtom, type PrimitiveAtom } from "jotai";
+import type { PrimitiveAtom } from "jotai";
 import { Title } from "./components/title";
 import { Desc } from "./components/desc";
+import { Checked } from "./components/checked";
 
 type Props = {
     atom: PrimitiveAtom<Task>;
@@ -27,7 +28,6 @@ type Props = {
 export const TaskItem: React.FC<Props> = (props) => {
     const { atom } = props;
     const [isOpen, setIsOpen] = useState(false);
-    const [data] = useAtom(atom);
 
     return (
         <div
@@ -39,7 +39,7 @@ export const TaskItem: React.FC<Props> = (props) => {
             }}
         >
             <div className="flex items-start justify-between">
-                <Checkbox className="mr-2 mt-0.5" />
+                <Checked atom={atom} />
                 <AnimatePresence>
                     {!isOpen && (
                         <motion.div
