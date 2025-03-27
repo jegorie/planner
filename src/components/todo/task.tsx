@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import { useAtom, type PrimitiveAtom } from "jotai";
 import { Title } from "./components/title";
+import { Desc } from "./components/desc";
 
 type Props = {
     atom: PrimitiveAtom<Task>;
@@ -37,8 +38,8 @@ export const TaskItem: React.FC<Props> = (props) => {
                 !isOpen && setIsOpen(true);
             }}
         >
-            <div className="flex items-center justify-between">
-                <Checkbox className="mr-2" />
+            <div className="flex items-start justify-between">
+                <Checkbox className="mr-2 mt-0.5" />
                 <AnimatePresence>
                     {!isOpen && (
                         <motion.div
@@ -57,9 +58,11 @@ export const TaskItem: React.FC<Props> = (props) => {
                                 opacity: 0,
                                 marginRight: 0,
                             }}
-                            className="text-xs border rounded text-nowrap overflow-hidden"
+                            className="overflow-hidden shrink-0"
                         >
-                            <div className="px-2 py-1">today 19:00</div>
+                            <div className="px-2 py-1 text-xs border rounded text-nowrap">
+                                today 19:00
+                            </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -68,7 +71,7 @@ export const TaskItem: React.FC<Props> = (props) => {
                     variant="ghost"
                     size="icon"
                     className={cn(
-                        "-mt-2 -mt-2 ml-2 opacity-0 transition-opacity self-start",
+                        "-my-1.5 ml-1.5 opacity-0 transition-opacity self-start",
                         {
                             "opacity-100": isOpen,
                         },
@@ -81,33 +84,9 @@ export const TaskItem: React.FC<Props> = (props) => {
                 </Button>
             </div>
             <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        className="mx-6 overflow-hidden"
-                        initial={{
-                            height: 0,
-                            opacity: 0,
-                            marginTop: 0,
-                            marginBottom: 0,
-                        }}
-                        animate={{
-                            height: isOpen ? "auto" : 0,
-                            opacity: isOpen ? 1 : 0,
-                            marginTop: isOpen ? 8 : 0,
-                            marginBottom: isOpen ? 8 : 0,
-                        }}
-                        exit={{
-                            height: 0,
-                            opacity: 0,
-                            marginTop: 0,
-                            marginBottom: 0,
-                        }}
-                    >
-                        {data.desc}
-                    </motion.div>
-                )}
+                {isOpen && <Desc atom={atom} isOpen={isOpen} />}
             </AnimatePresence>
-            <div className="flex ml-6 gap-1 mt-1">
+            <div className="flex ml-7 gap-1 mt-1">
                 <Tag title="School" />
                 <Tag title="Work" />
             </div>

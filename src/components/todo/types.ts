@@ -56,7 +56,7 @@ export type Schedule = {
 export type Task = {
     id: string;
     title: string;
-    desc?: string;
+    desc: string;
     schedule?: Schedule;
     labels?: string[];
     priority?: Priority;

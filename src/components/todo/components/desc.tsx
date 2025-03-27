@@ -14,35 +14,43 @@ type Props = {
     isOpen: boolean;
 };
 
-export const Title: React.FC<Props> = (props) => {
+export const Desc: React.FC<Props> = (props) => {
     const quillRef = useRef<Quill>(null);
     const { atom, isOpen } = props;
-    const [title, setTitle] = useAtom(
+    const [desc, setDesc] = useAtom(
         useMemo(() => {
-            return focusAtom(atom, (optic) => optic.prop("title"));
+            return focusAtom(atom, (optic) => optic.prop("desc"));
         }, [atom]),
     );
 
     return (
         <motion.div
+            className="ml-7 mr-7 overflow-hidden flex-auto"
             initial={{
-                height: 24,
+                height: 0,
+                opacity: 0,
+                marginTop: 0,
+                marginBottom: 0,
             }}
             animate={{
-                height: isOpen ? "auto" : 24,
+                height: isOpen ? "auto" : 0,
+                opacity: isOpen ? 1 : 0,
+                marginTop: isOpen ? 8 : 0,
+                marginBottom: isOpen ? 8 : 0,
             }}
-            className={cn("flex-auto overflow-hidden font-medium", {
-                "pointer-events-none font-normal": !isOpen,
-                //"[&_p]:whitespace-nowrap [&_p]:text-ellipsis [&_p]:overflow-hidden w-0":
-                //    !isOpen,
-            })}
+            exit={{
+                height: 0,
+                opacity: 0,
+                marginTop: 0,
+                marginBottom: 0,
+            }}
         >
             <Editor
                 ref={quillRef}
-                defaultValue={new Delta().insert(title)}
+                defaultValue={new Delta().insert(desc || "")}
                 onTextChange={() => {
                     if (quillRef.current) {
-                        setTitle(
+                        setDesc(
                             quillRef.current?.getText(
                                 0,
                                 quillRef.current.getLength(),
