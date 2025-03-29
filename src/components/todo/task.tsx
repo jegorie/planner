@@ -1,18 +1,6 @@
-import type { Task } from "@/types/task";
-import { Checkbox } from "../ui/checkbox";
-import { Tag } from "./tag";
+import type { Task } from "./types";
 import { Button } from "../ui/button";
-import {
-    AlarmClockIcon,
-    CalendarDaysIcon,
-    ChevronUpIcon,
-    EllipsisVerticalIcon,
-    FlagIcon,
-    PaperclipIcon,
-    PinIcon,
-    PlusIcon,
-    TagIcon,
-} from "lucide-react";
+import { ChevronUpIcon } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -20,6 +8,8 @@ import type { PrimitiveAtom } from "jotai";
 import { Title } from "./components/title";
 import { Desc } from "./components/desc";
 import { Checked } from "./components/checked";
+import { Labels } from "./components/labels";
+import { Toolbar } from "./components/toolbar/toolbar";
 
 type Props = {
     atom: PrimitiveAtom<Task>;
@@ -71,7 +61,7 @@ export const TaskItem: React.FC<Props> = (props) => {
                     variant="ghost"
                     size="icon"
                     className={cn(
-                        "-my-1.5 ml-1.5 opacity-0 transition-opacity self-start",
+                        "-my-1.5 -mr-1.5 ml-1.5 opacity-0 transition-opacity self-start",
                         {
                             "opacity-100": isOpen,
                         },
@@ -86,62 +76,9 @@ export const TaskItem: React.FC<Props> = (props) => {
             <AnimatePresence>
                 {isOpen && <Desc atom={atom} isOpen={isOpen} />}
             </AnimatePresence>
-            <div className="flex ml-7 gap-1 mt-1">
-                <Tag title="School" />
-                <Tag title="Work" />
-            </div>
+            <Labels atom={atom} />
             <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        className="flex ml-3 justify-between mt-2 overflow-hidden"
-                        initial={{
-                            height: 0,
-                            opacity: 0,
-                            marginTop: 0,
-                            marginBottom: 0,
-                        }}
-                        animate={{
-                            height: isOpen ? "auto" : 0,
-                            opacity: isOpen ? 1 : 0,
-                            marginTop: isOpen ? 8 : 0,
-                            marginBottom: isOpen ? 8 : 0,
-                        }}
-                        exit={{
-                            height: 0,
-                            opacity: 0,
-                            marginTop: 0,
-                            marginBottom: 0,
-                        }}
-                    >
-                        <Button variant="ghost" disabled>
-                            <CalendarDaysIcon />
-                            Schedule
-                        </Button>
-                        <div>
-                            <Button variant="ghost" size="icon" disabled>
-                                <PlusIcon />
-                            </Button>
-                            <Button variant="ghost" size="icon" disabled>
-                                <PaperclipIcon />
-                            </Button>
-                            <Button variant="ghost" size="icon" disabled>
-                                <TagIcon />
-                            </Button>
-                            <Button variant="ghost" size="icon" disabled>
-                                <FlagIcon />
-                            </Button>
-                            <Button variant="ghost" size="icon" disabled>
-                                <AlarmClockIcon />
-                            </Button>
-                            <Button variant="ghost" size="icon" disabled>
-                                <PinIcon />
-                            </Button>
-                            <Button variant="ghost" size="icon" disabled>
-                                <EllipsisVerticalIcon />
-                            </Button>
-                        </div>
-                    </motion.div>
-                )}
+                {isOpen && <Toolbar atom={atom} isOpen={isOpen} />}
             </AnimatePresence>
         </div>
     );
