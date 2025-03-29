@@ -1,3 +1,4 @@
+import { Checked } from "./ui/checked";
 import type { Task } from "./types";
 import { ChevronUpIcon } from "lucide-react";
 import { useState } from "react";
@@ -6,7 +7,6 @@ import { cn } from "@/shared/lib/utils";
 import type { PrimitiveAtom } from "jotai";
 import { Title } from "./ui/title";
 import { Desc } from "./ui/desc";
-import { Checked } from "./ui/checked";
 import { Labels } from "./ui/labels";
 import { Toolbar } from "./ui/toolbar/toolbar";
 import { Button } from "@/shared/ui/button";
