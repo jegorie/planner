@@ -10,6 +10,7 @@ const initialData: Task[] = [
         title: "Купить картошку \nи макароны",
         labels: ["Work", "Home"],
         priority: 1,
+        subTasksIds: [],
     },
     {
         id: "2222-2222-2222-2222",
@@ -18,6 +19,7 @@ const initialData: Task[] = [
         desc: "Тут могло быть что-то важное, но я забыл что хотел написать",
         labels: ["School"],
         priority: 4,
+        subTasksIds: [],
     },
 ];
 

@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { SearchIcon } from "lucide-react";
 
@@ -64,7 +64,7 @@ function CommandInput({
             <CommandPrimitive.Input
                 data-slot="command-input"
                 className={cn(
-                    "placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+                    "placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-base md:text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
                     className,
                 )}
                 {...props}

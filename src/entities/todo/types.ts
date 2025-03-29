@@ -59,7 +59,7 @@ export type Task = {
     title: string;
     desc: string;
     schedule?: Schedule;
-    labels?: string[];
+    labels: string[];
     priority?: Priority;
-    subTasksIds?: string[];
+    subTasksIds: string[];
 };

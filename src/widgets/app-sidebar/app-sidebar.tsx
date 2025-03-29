@@ -6,7 +6,7 @@ import {
     TagIcon,
 } from "lucide-react";
 
-import { AppSwitcher } from "@/features/app-switcher/app-switcher";
+import { AppSwitcher } from "./app-switcher";
 import {
     Collapsible,
     CollapsibleContent,
