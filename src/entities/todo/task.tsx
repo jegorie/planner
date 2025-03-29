@@ -4,11 +4,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/shared/lib/utils";
 import type { PrimitiveAtom } from "jotai";
-import { Title } from "./components/title";
-import { Desc } from "./components/desc";
-import { Checked } from "./components/checked";
-import { Labels } from "./components/labels";
-import { Toolbar } from "./components/toolbar/toolbar";
+import { Title } from "./ui/title";
+import { Desc } from "./ui/desc";
+import { Checked } from "./ui/checked";
+import { Labels } from "./ui/labels";
+import { Toolbar } from "./ui/toolbar/toolbar";
 import { Button } from "@/shared/ui/button";
 
 type Props = {

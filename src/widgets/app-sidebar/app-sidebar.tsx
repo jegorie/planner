@@ -26,7 +26,7 @@ import {
 } from "@/shared/ui/sidebar";
 import { cn } from "@/shared/lib/utils";
 import type { ReactNode } from "react";
-import { ModeToggle } from "@/features/mode-toggle/mode-toggle";
+import { ModeToggle } from "@/shared/ui/mode-toggle";
 
 // This is sample data.
 const data = {
