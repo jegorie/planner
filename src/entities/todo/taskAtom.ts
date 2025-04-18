@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { splitAtom } from "jotai/utils";
-import type { Task } from "./types";
+import { Priority, type Task } from "./types";
 
 const initialData: Task[] = [
     {
@@ -9,7 +9,7 @@ const initialData: Task[] = [
         desc: "",
         title: "Купить картошку \nи макароны",
         labels: ["Work", "Home"],
-        priority: 1,
+        priority: Priority.high,
         subTasksIds: [],
     },
     {
@@ -18,7 +18,7 @@ const initialData: Task[] = [
         title: "Очень важный текст",
         desc: "Тут могло быть что-то важное, но я забыл что хотел написать",
         labels: ["School"],
-        priority: 4,
+        priority: Priority.none,
         subTasksIds: [],
     },
 ];

@@ -48,13 +48,7 @@ export const EditLabels: React.FC<Props> = (props) => {
 
     if (isMobile) {
         return (
-            <Drawer
-                open={open}
-                onOpenChange={(open) => {
-                    console.log("ChAngE");
-                    setOpen(open);
-                }}
-            >
+            <Drawer open={open} onOpenChange={setOpen}>
                 <DrawerTrigger asChild>
                     <Button variant="ghost" size="icon">
                         <TagIcon />
@@ -110,7 +104,7 @@ type CommandProps = {
     setSearch: (search: string) => void;
     setOpen: (open: boolean) => void;
     availableLabels: Label[];
-    setAvailableLabels: (useMediaQuery: Label[]) => void;
+    setAvailableLabels: (labels: Label[]) => void;
     labels: string[] | undefined;
     setLabels: (labels: string[]) => void;
 };

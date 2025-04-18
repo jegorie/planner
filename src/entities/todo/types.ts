@@ -1,9 +1,10 @@
-enum Priority {
+export enum Priority {
     high = 1,
     medium = 2,
     low = 3,
     none = 4,
 }
+
 enum RepeatPeriods {
     none = 0,
     daily = 1,
@@ -60,6 +61,6 @@ export type Task = {
     desc: string;
     schedule?: Schedule;
     labels: string[];
-    priority?: Priority;
+    priority: Priority;
     subTasksIds: string[];
 };

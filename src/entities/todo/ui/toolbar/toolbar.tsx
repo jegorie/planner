@@ -12,6 +12,7 @@ import {
     PlusIcon,
 } from "lucide-react";
 import { EditLabels } from "./edit-labels";
+import { EditPriority } from "./edit-priority";
 
 type Props = {
     atom: PrimitiveAtom<Task>;
@@ -52,9 +53,7 @@ export const Toolbar: React.FC<Props> = (props) => {
                     <PaperclipIcon />
                 </Button>
                 <EditLabels atom={atom} />
-                <Button variant="ghost" size="icon" disabled>
-                    <FlagIcon />
-                </Button>
+                <EditPriority atom={atom} />
                 <Button variant="ghost" size="icon" disabled>
                     <AlarmClockIcon />
                 </Button>
