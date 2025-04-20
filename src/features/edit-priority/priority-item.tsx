@@ -3,6 +3,7 @@ import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import type { FC } from "react";
 import { PriorityIcon } from "./priority-icon";
+import { titleMap } from "./utils/titleMap";
 
 type Props = {
     currentPriority: Priority;
@@ -10,14 +11,7 @@ type Props = {
     onChange: (priority: Priority) => void;
 };
 
-const titleMap: Record<Priority, string> = {
-    1: "High",
-    2: "Medium",
-    3: "Low",
-    4: "None",
-};
-
-export const PriorityCheckbox: FC<Props> = (props) => {
+export const PriorityItem: FC<Props> = (props) => {
     const { priority, currentPriority, onChange } = props;
 
     const selected = currentPriority === priority;

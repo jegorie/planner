@@ -11,8 +11,16 @@ import {
     DrawerTrigger,
 } from "@/shared/ui/drawer";
 import { PriorityIcon } from "./priority-icon";
-import { PriorityCheckbox } from "./priority-checkbox";
+import { PriorityItem } from "./priority-item";
 import { Priority } from "@/entities/task/types";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectLabel,
+} from "@/shared/ui/select";
+import { SelectTrigger } from "@radix-ui/react-select";
+import { PrioritySelectItem } from "./priority-select-item";
 
 type Props = {
     currentPriority: Priority;
@@ -26,8 +34,8 @@ export const EditPriority: React.FC<Props> = (props) => {
     const isMobile = useIsMobile();
 
     const handlePrioritySelect = useCallback(
-        (priority: Priority) => {
-            setCurrentPriority(priority);
+        (priority: string | Priority) => {
+            setCurrentPriority(+priority);
             setOpen(false);
         },
         [setCurrentPriority],
@@ -46,8 +54,24 @@ export const EditPriority: React.FC<Props> = (props) => {
                         <DrawerTitle>Priority</DrawerTitle>
                         <DrawerDescription>Choose priority</DrawerDescription>
                     </DrawerHeader>
-                    <div className="mt-4 border-t text-base">
-                        <EditPriorityContent
+                    <div className="mt-4 border-t text-base p-2 flex flex-col gap-1">
+                        <PriorityItem
+                            priority={Priority.high}
+                            currentPriority={currentPriority}
+                            onChange={handlePrioritySelect}
+                        />
+                        <PriorityItem
+                            priority={Priority.medium}
+                            currentPriority={currentPriority}
+                            onChange={handlePrioritySelect}
+                        />
+                        <PriorityItem
+                            priority={Priority.low}
+                            currentPriority={currentPriority}
+                            onChange={handlePrioritySelect}
+                        />
+                        <PriorityItem
+                            priority={Priority.none}
                             currentPriority={currentPriority}
                             onChange={handlePrioritySelect}
                         />
@@ -58,41 +82,36 @@ export const EditPriority: React.FC<Props> = (props) => {
     }
 
     return (
-        <Popover open={open} onOpenChange={setOpen} modal>
-            <PopoverTrigger asChild>
+        <Select
+            value={currentPriority.toString()}
+            onValueChange={handlePrioritySelect}
+        >
+            <SelectTrigger asChild>
                 <Button variant="ghost" size="icon">
                     <PriorityIcon priority={currentPriority} />
                 </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-                <EditPriorityContent
-                    currentPriority={currentPriority}
-                    onChange={handlePrioritySelect}
-                />
-            </PopoverContent>
-        </Popover>
-    );
-};
-
-type ContentProps = {
-    currentPriority: Priority;
-    onChange: (priority: Priority) => void;
-};
-
-const EditPriorityContent: FC<ContentProps> = (props) => {
-    const { onChange, ...rest } = props;
-
-    const checkboxProps = {
-        ...rest,
-        onChange,
-    };
-
-    return (
-        <div className="p-2 flex flex-col gap-1">
-            <PriorityCheckbox priority={Priority.high} {...checkboxProps} />
-            <PriorityCheckbox priority={Priority.medium} {...checkboxProps} />
-            <PriorityCheckbox priority={Priority.low} {...checkboxProps} />
-            <PriorityCheckbox priority={Priority.none} {...checkboxProps} />
-        </div>
+            </SelectTrigger>
+            <SelectContent align="center" className="w-52">
+                <SelectGroup>
+                    <SelectLabel>Priority</SelectLabel>
+                    <PrioritySelectItem
+                        value={Priority.high.toString()}
+                        priority={Priority.high}
+                    />
+                    <PrioritySelectItem
+                        value={Priority.medium.toString()}
+                        priority={Priority.medium}
+                    />
+                    <PrioritySelectItem
+                        value={Priority.low.toString()}
+                        priority={Priority.low}
+                    />
+                    <PrioritySelectItem
+                        value={Priority.none.toString()}
+                        priority={Priority.none}
+                    />
+                </SelectGroup>
+            </SelectContent>
+        </Select>
     );
 };
