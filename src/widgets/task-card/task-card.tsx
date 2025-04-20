@@ -1,23 +1,39 @@
-import { Checked } from "./ui/checked";
-import type { Task } from "./types";
-import { ChevronUpIcon } from "lucide-react";
-import { useState } from "react";
+import { Checked } from "@/entities/task/ui/task-card/checked";
+import type { Task } from "@/entities/task/types";
+import {
+    AlarmClockIcon,
+    CalendarDaysIcon,
+    ChevronUpIcon,
+    EllipsisVerticalIcon,
+    PaperclipIcon,
+    PinIcon,
+    PlusIcon,
+} from "lucide-react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/shared/lib/utils";
-import type { PrimitiveAtom } from "jotai";
-import { Title } from "./ui/title";
-import { Desc } from "./ui/desc";
-import { Labels } from "./ui/labels";
-import { Toolbar } from "./ui/toolbar/toolbar";
+import { useAtom, type PrimitiveAtom } from "jotai";
+import { Title } from "@/entities/task/ui/task-card/title";
+import { Desc } from "@/entities/task/ui/task-card/desc";
+import { Labels } from "@/entities/task/ui/task-card/labels";
+import { Toolbar } from "@/entities/task/ui/task-card/toolbar/toolbar";
 import { Button } from "@/shared/ui/button";
+import { EditLabels } from "@/entities/task/ui/task-card/toolbar/edit-labels";
+import { EditPriority } from "@/features/edit-priority";
+import { focusAtom } from "jotai-optics";
 
 type Props = {
     atom: PrimitiveAtom<Task>;
 };
 
-export const TaskItem: React.FC<Props> = (props) => {
+export const TaskCard: React.FC<Props> = (props) => {
     const { atom } = props;
     const [isOpen, setIsOpen] = useState(false);
+    const [currentPriority, setCurrentPriority] = useAtom(
+        useMemo(() => {
+            return focusAtom(atom, (optic) => optic.prop("priority"));
+        }, [atom]),
+    );
 
     return (
         <div
@@ -78,7 +94,36 @@ export const TaskItem: React.FC<Props> = (props) => {
             </AnimatePresence>
             <Labels atom={atom} />
             <AnimatePresence>
-                {isOpen && <Toolbar atom={atom} isOpen={isOpen} />}
+                {isOpen && (
+                    <Toolbar isOpen={isOpen}>
+                        <Button variant="ghost" disabled>
+                            <CalendarDaysIcon />
+                            Schedule
+                        </Button>
+                        <div>
+                            <Button variant="ghost" size="icon" disabled>
+                                <PlusIcon />
+                            </Button>
+                            <Button variant="ghost" size="icon" disabled>
+                                <PaperclipIcon />
+                            </Button>
+                            <EditLabels atom={atom} />
+                            <EditPriority
+                                currentPriority={currentPriority}
+                                setCurrentPriority={setCurrentPriority}
+                            />
+                            <Button variant="ghost" size="icon" disabled>
+                                <AlarmClockIcon />
+                            </Button>
+                            <Button variant="ghost" size="icon" disabled>
+                                <PinIcon />
+                            </Button>
+                            <Button variant="ghost" size="icon" disabled>
+                                <EllipsisVerticalIcon />
+                            </Button>
+                        </div>
+                    </Toolbar>
+                )}
             </AnimatePresence>
         </div>
     );

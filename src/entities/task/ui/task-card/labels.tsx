@@ -1,5 +1,5 @@
 import { useAtom, type PrimitiveAtom } from "jotai";
-import type { Task } from "../types";
+import type { Task } from "../../types";
 import { useMemo } from "react";
 import { focusAtom } from "jotai-optics";
 import { AnimatePresence, motion } from "motion/react";

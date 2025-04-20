@@ -1,6 +1,6 @@
 import { Checkbox } from "@/shared/ui/checkbox";
 import { useAtom, type PrimitiveAtom } from "jotai";
-import { Priority, type Task } from "../types";
+import { Priority, type Task } from "../../types";
 import { useMemo } from "react";
 import { focusAtom } from "jotai-optics";
 import { cn } from "@/shared/lib/utils";

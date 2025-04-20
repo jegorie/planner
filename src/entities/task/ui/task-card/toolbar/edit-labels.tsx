@@ -1,6 +1,6 @@
 import { Button } from "@/shared/ui/button";
 import { PlusIcon, TagIcon } from "lucide-react";
-import type { Task } from "../../types";
+import type { Task } from "../../../types";
 import { useAtom, type PrimitiveAtom } from "jotai";
 import { useMemo, useState } from "react";
 import { focusAtom } from "jotai-optics";

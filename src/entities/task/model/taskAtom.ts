@@ -1,6 +1,15 @@
 import { atom } from "jotai";
 import { splitAtom } from "jotai/utils";
-import { Priority, type Task } from "./types";
+import { Priority, type Task } from "../types";
+
+export const defaultTask = {
+    checked: false,
+    desc: "",
+    title: "",
+    labels: [],
+    priority: Priority.low,
+    subTasksIds: [],
+};
 
 const initialData: Task[] = [
     {

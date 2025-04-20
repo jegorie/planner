@@ -1,7 +1,7 @@
 import { useAtom, type PrimitiveAtom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { useMemo, useRef } from "react";
-import type { Task } from "../types";
+import type { Task } from "../../types";
 import { cn } from "@/shared/lib/utils";
 import { motion } from "motion/react";
 import Quill from "quill";

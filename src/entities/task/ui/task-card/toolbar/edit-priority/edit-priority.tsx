@@ -1,5 +1,5 @@
 import { Button } from "@/shared/ui/button";
-import type { Task } from "../../../types";
+import type { Task } from "../../../../types";
 import { useAtom, type PrimitiveAtom } from "jotai";
 import { useCallback, useMemo, useState, type FC } from "react";
 import { focusAtom } from "jotai-optics";
@@ -15,7 +15,7 @@ import {
 } from "@/shared/ui/drawer";
 import { PriorityIcon } from "./priority-icon";
 import { PriorityCheckbox } from "./priority-checkbox";
-import { Priority } from "@/entities/todo/types";
+import { Priority } from "@/entities/task/types";
 
 type Props = {
     atom: PrimitiveAtom<Task>;

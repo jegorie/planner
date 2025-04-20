@@ -1,4 +1,4 @@
-import { Priority } from "@/entities/todo/types";
+import { Priority } from "@/entities/task/types";
 import { cn } from "@/shared/lib/utils";
 import { FlagIcon } from "lucide-react";
 import type { FC } from "react";

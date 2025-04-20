@@ -1,4 +1,4 @@
-import type { Priority } from "@/entities/todo/types";
+import type { Priority } from "@/entities/task/types";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import type { FC } from "react";
