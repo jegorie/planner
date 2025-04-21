@@ -10,7 +10,7 @@ export const Toolbar: React.FC<Props> = (props) => {
 
     return (
         <motion.div
-            className="flex ml-4 justify-between mt-2 overflow-hidden"
+            className="flex ml-4 justify-between mt-1 overflow-hidden items-center py-1"
             initial={{
                 height: 0,
                 opacity: 0,

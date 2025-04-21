@@ -18,7 +18,7 @@ import { Desc } from "@/entities/task/ui/task-card/desc";
 import { Labels } from "@/entities/task/ui/task-card/labels";
 import { Toolbar } from "@/entities/task/ui/task-card/toolbar/toolbar";
 import { Button } from "@/shared/ui/button";
-import { EditLabels } from "@/entities/task/ui/task-card/toolbar/edit-labels";
+import { EditLabels } from "@/features/edit-labels/edit-labels";
 import { EditPriority } from "@/features/edit-priority";
 import { focusAtom } from "jotai-optics";
 
@@ -32,6 +32,11 @@ export const TaskCard: React.FC<Props> = (props) => {
     const [currentPriority, setCurrentPriority] = useAtom(
         useMemo(() => {
             return focusAtom(atom, (optic) => optic.prop("priority"));
+        }, [atom]),
+    );
+    const [labels, setLabels] = useAtom(
+        useMemo(() => {
+            return focusAtom(atom, (optic) => optic.prop("labels"));
         }, [atom]),
     );
 
@@ -92,7 +97,7 @@ export const TaskCard: React.FC<Props> = (props) => {
             <AnimatePresence>
                 {isOpen && <Desc atom={atom} isOpen={isOpen} />}
             </AnimatePresence>
-            <Labels atom={atom} />
+            <Labels labels={labels} className="mt-1 ml-7" />
             <AnimatePresence>
                 {isOpen && (
                     <Toolbar isOpen={isOpen}>
@@ -107,7 +112,7 @@ export const TaskCard: React.FC<Props> = (props) => {
                             <Button variant="ghost" size="icon" disabled>
                                 <PaperclipIcon />
                             </Button>
-                            <EditLabels atom={atom} />
+                            <EditLabels labels={labels} setLabels={setLabels} />
                             <EditPriority
                                 currentPriority={currentPriority}
                                 setCurrentPriority={setCurrentPriority}

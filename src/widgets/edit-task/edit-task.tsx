@@ -15,25 +15,44 @@ import {
     FormMessage,
 } from "@/shared/ui/form";
 import { Input } from "@/shared/ui/input";
-import type { FC } from "react";
+import { useEffect, type FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import type { Task } from "@/entities/task/types";
+import { Priority, type Task } from "@/entities/task/types";
 import { TextareaAutosize } from "@/shared/ui/textarea";
 import { EditPriority } from "@/features/edit-priority";
+import { EditLabels } from "@/features/edit-labels/edit-labels";
+import { Labels } from "@/entities/task/ui/task-card/labels";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 type Props = {
     open: boolean;
     onOpenChange: (bool: boolean) => void;
     defaultValues?: Task;
+    parentTaskId?: string;
 };
 
 export const EditTask: FC<Props> = (props) => {
     const { open, onOpenChange, defaultValues } = props;
+    const isEditing = !!defaultValues;
     const form = useForm<Task>({
         mode: "onChange",
-        defaultValues,
+        defaultValues: {
+            priority: Priority.none,
+            checked: false,
+            title: "",
+            desc: "",
+            labels: [],
+            subTasksIds: [],
+            ...defaultValues,
+        },
     });
-    const { control } = form;
+    const { control, watch, reset, handleSubmit } = form;
+
+    useEffect(() => {
+        () => {
+            reset();
+        };
+    }, [reset]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -41,55 +60,74 @@ export const EditTask: FC<Props> = (props) => {
                 <DialogHeader>
                     <DialogTitle>New task</DialogTitle>
                 </DialogHeader>
+                <DialogDescription>Some desc</DialogDescription>
                 <Form {...form}>
-                    <FormField
-                        control={control}
-                        name="title"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Title</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Title" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={control}
-                        name="desc"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Desc</FormLabel>
-                                <FormControl>
-                                    <TextareaAutosize
-                                        className="resize-none"
-                                        placeholder="Desc"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <div className="flex gap-2 justify-between">
-                        <div />
-                        <div className="flex">
-                            <Controller
-                                control={control}
-                                name="priority"
-                                render={({ field }) => (
-                                    <EditPriority
-                                        currentPriority={field.value}
-                                        setCurrentPriority={field.onChange}
-                                    />
-                                )}
-                            />
+                    <form
+                        onSubmit={handleSubmit((data) => console.log(data))}
+                        className="space-y-4"
+                    >
+                        <FormField
+                            control={control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Title</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Title" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={control}
+                            name="desc"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Desc</FormLabel>
+                                    <FormControl>
+                                        <TextareaAutosize
+                                            className="resize-none"
+                                            placeholder="Desc"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Labels labels={watch("labels")} />
+                        <div className="flex gap-2 justify-between">
+                            <div />
+                            <div className="flex">
+                                <Controller
+                                    control={control}
+                                    name="labels"
+                                    render={({ field }) => (
+                                        <EditLabels
+                                            labels={field.value}
+                                            setLabels={field.onChange}
+                                        />
+                                    )}
+                                />
+                                <Controller
+                                    control={control}
+                                    name="priority"
+                                    render={({ field }) => (
+                                        <EditPriority
+                                            currentPriority={field.value}
+                                            setCurrentPriority={field.onChange}
+                                        />
+                                    )}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <DialogFooter>
-                        <Button type="submit">Save changes</Button>
-                    </DialogFooter>
+                        <DialogFooter>
+                            <Button type="submit">
+                                {isEditing ? "Save changes" : "Create"}
+                            </Button>
+                        </DialogFooter>
+                    </form>
                 </Form>
             </DialogContent>
         </Dialog>

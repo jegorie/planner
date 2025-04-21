@@ -1,9 +1,7 @@
-import { useAtom, type PrimitiveAtom } from "jotai";
-import type { Task } from "../../types";
-import { useMemo } from "react";
-import { focusAtom } from "jotai-optics";
+import { useAtom } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
 import { labelAtoms } from "@/entities/label/atoms/allLabelsAtom";
+import { cn } from "@/shared/lib/utils";
 
 type LabelProps = {
     title: string;
@@ -42,17 +40,13 @@ const Label: React.FC<LabelProps> = (props) => {
 };
 
 type Props = {
-    atom: PrimitiveAtom<Task>;
+    labels: string[];
+    className?: string;
 };
 
 export const Labels: React.FC<Props> = (props) => {
-    const { atom } = props;
+    const { labels, className } = props;
     const [availableLabels] = useAtom(labelAtoms);
-    const [labels] = useAtom(
-        useMemo(() => {
-            return focusAtom(atom, (optic) => optic.prop("labels"));
-        }, [atom]),
-    );
 
     const filteredLabels =
         labels &&
@@ -81,7 +75,7 @@ export const Labels: React.FC<Props> = (props) => {
                         width: 0,
                         opacity: 0,
                     }}
-                    className="flex ml-7 gap-1 mt-1"
+                    className={cn("flex gap-1", className)}
                 >
                     <AnimatePresence>
                         {filteredLabels.map((label) => (
