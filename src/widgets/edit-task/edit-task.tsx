@@ -50,10 +50,13 @@ export const EditTask: FC<Props> = (props) => {
     const { control, watch, reset, handleSubmit } = form;
 
     useEffect(() => {
+        if (!open) {
+            reset();
+        }
         () => {
             reset();
         };
-    }, [reset]);
+    }, [reset, open]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>

@@ -1,6 +1,5 @@
 import { Button } from "@/shared/ui/button";
-import { useCallback, useState, type FC } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { useCallback, useState } from "react";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
     Drawer,

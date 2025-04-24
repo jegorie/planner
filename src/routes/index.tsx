@@ -1,7 +1,7 @@
 import { taskAtoms } from "@/entities/task/model/taskAtom";
 import { SidebarTrigger } from "@/shared/ui/sidebar";
 import { createFileRoute } from "@tanstack/react-router";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useStore } from "jotai";
 import { NewTaskButton } from "@/entities/task/ui/new-task-button";
 import { useState } from "react";
 import { TaskCard } from "@/widgets/task-card/task-card";
@@ -15,10 +15,15 @@ export const Route = createFileRoute("/")({
 function App() {
     const [openEditTask, setOpenEditTask] = useState(false);
     const [tasks, setTasks] = useAtom(taskAtoms);
+    const store = useStore();
 
     const handleSubmit = (data: Task) => {
         setTasks((prev) => [...prev, atom(data)]);
         setOpenEditTask(false);
+    };
+
+    const deleteTask = (id: string) => {
+        setTasks((prev) => prev.filter((item) => store.get(item).id !== id));
     };
 
     return (
@@ -32,7 +37,11 @@ function App() {
             <main className="flex flex-col items-center gap-4 px-5 relative flex-auto">
                 <NewTaskButton onClick={() => setOpenEditTask(true)} />
                 {tasks.map((atom) => (
-                    <TaskCard atom={atom} key={atom.toString()} />
+                    <TaskCard
+                        atom={atom}
+                        key={atom.toString()}
+                        onDeleteClick={deleteTask}
+                    />
                 ))}
             </main>
             <EditTask

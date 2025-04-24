@@ -4,7 +4,6 @@ import {
     AlarmClockIcon,
     CalendarDaysIcon,
     ChevronUpIcon,
-    EllipsisVerticalIcon,
     PaperclipIcon,
     PinIcon,
     PlusIcon,
@@ -12,7 +11,7 @@ import {
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/shared/lib/utils";
-import { useAtom, type PrimitiveAtom } from "jotai";
+import { useAtom, useAtomValue, type PrimitiveAtom } from "jotai";
 import { Title } from "@/entities/task/ui/task-card/title";
 import { Desc } from "@/entities/task/ui/task-card/desc";
 import { Labels } from "@/entities/task/ui/task-card/labels";
@@ -21,14 +20,18 @@ import { Button } from "@/shared/ui/button";
 import { EditLabels } from "@/features/edit-labels/edit-labels";
 import { EditPriority } from "@/features/edit-priority";
 import { focusAtom } from "jotai-optics";
+import { ExtraMenu } from "@/entities/task/ui/task-card/extra-menu";
+import { DeleteTaskDropDownItem } from "@/features/delete-task/ui/delete-task-dropdown-item";
 
 type Props = {
     atom: PrimitiveAtom<Task>;
+    onDeleteClick: (id: string) => void;
 };
 
 export const TaskCard: React.FC<Props> = (props) => {
-    const { atom } = props;
+    const { atom, onDeleteClick } = props;
     const [isOpen, setIsOpen] = useState(false);
+    const task = useAtomValue(atom);
     const [currentPriority, setCurrentPriority] = useAtom(
         useMemo(() => {
             return focusAtom(atom, (optic) => optic.prop("priority"));
@@ -39,6 +42,10 @@ export const TaskCard: React.FC<Props> = (props) => {
             return focusAtom(atom, (optic) => optic.prop("labels"));
         }, [atom]),
     );
+
+    const handleDelete = () => {
+        onDeleteClick(task.id);
+    };
 
     return (
         <div
@@ -123,9 +130,11 @@ export const TaskCard: React.FC<Props> = (props) => {
                             <Button variant="ghost" size="icon" disabled>
                                 <PinIcon />
                             </Button>
-                            <Button variant="ghost" size="icon" disabled>
-                                <EllipsisVerticalIcon />
-                            </Button>
+                            <ExtraMenu>
+                                <DeleteTaskDropDownItem
+                                    onClick={handleDelete}
+                                />
+                            </ExtraMenu>
                         </div>
                     </Toolbar>
                 )}
