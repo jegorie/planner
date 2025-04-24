@@ -1,14 +1,11 @@
-import { useAtom } from "jotai";
+import { useAtomValue, useStore } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
 import { labelAtoms } from "@/entities/label/atoms/allLabelsAtom";
 import { cn } from "@/shared/lib/utils";
+import type { Label as TLabel } from "@/entities/label/types";
+import { useMemo } from "react";
 
-type LabelProps = {
-    title: string;
-    color: string;
-};
-
-const Label: React.FC<LabelProps> = (props) => {
+const Label: React.FC<TLabel> = (props) => {
     const { title } = props;
 
     return (
@@ -46,15 +43,18 @@ type Props = {
 
 export const Labels: React.FC<Props> = (props) => {
     const { labels, className } = props;
-    const [availableLabels] = useAtom(labelAtoms);
+    const store = useStore();
+    const availableLabelAtoms = useAtomValue(labelAtoms);
+    const availableLabels = useMemo(
+        () => availableLabelAtoms.map((item) => store.get(item)),
+        [store.get, availableLabelAtoms],
+    );
 
     const filteredLabels =
         labels &&
-        availableLabels.filter(
-            (availableLabel) =>
-                labels.findIndex((label) => label === availableLabel.title) >=
-                0,
-        );
+        availableLabels.filter((availableLabel) => {
+            return labels.includes(availableLabel.title);
+        });
 
     return (
         <AnimatePresence>
@@ -78,9 +78,9 @@ export const Labels: React.FC<Props> = (props) => {
                     className={cn("flex gap-1", className)}
                 >
                     <AnimatePresence>
-                        {filteredLabels.map((label) => (
-                            <Label {...label} key={label.title} />
-                        ))}
+                        {filteredLabels.map((label) => {
+                            return <Label key={label.title} {...label} />;
+                        })}
                     </AnimatePresence>
                 </motion.div>
             )}

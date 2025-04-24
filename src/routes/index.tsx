@@ -1,11 +1,12 @@
-import { taskAtom } from "@/entities/task/model/taskAtom";
+import { taskAtoms } from "@/entities/task/model/taskAtom";
 import { SidebarTrigger } from "@/shared/ui/sidebar";
 import { createFileRoute } from "@tanstack/react-router";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { NewTaskButton } from "@/entities/task/ui/new-task-button";
 import { useState } from "react";
 import { TaskCard } from "@/widgets/task-card/task-card";
 import { EditTask } from "@/widgets/edit-task/edit-task";
+import type { Task } from "@/entities/task/types";
 
 export const Route = createFileRoute("/")({
     component: App,
@@ -13,7 +14,12 @@ export const Route = createFileRoute("/")({
 
 function App() {
     const [openEditTask, setOpenEditTask] = useState(false);
-    const [taskAtoms] = useAtom(taskAtom);
+    const [tasks, setTasks] = useAtom(taskAtoms);
+
+    const handleSubmit = (data: Task) => {
+        setTasks((prev) => [...prev, atom(data)]);
+        setOpenEditTask(false);
+    };
 
     return (
         <div className="flex-auto flex flex-col">
@@ -25,11 +31,15 @@ function App() {
             </header>
             <main className="flex flex-col items-center gap-4 px-5 relative flex-auto">
                 <NewTaskButton onClick={() => setOpenEditTask(true)} />
-                {taskAtoms.map((atom) => (
+                {tasks.map((atom) => (
                     <TaskCard atom={atom} key={atom.toString()} />
                 ))}
             </main>
-            <EditTask open={openEditTask} onOpenChange={setOpenEditTask} />
+            <EditTask
+                open={openEditTask}
+                onOpenChange={setOpenEditTask}
+                onSubmit={handleSubmit}
+            />
         </div>
     );
 }

@@ -29,10 +29,11 @@ type Props = {
     onOpenChange: (bool: boolean) => void;
     defaultValues?: Task;
     parentTaskId?: string;
+    onSubmit: (data: Task) => void;
 };
 
 export const EditTask: FC<Props> = (props) => {
-    const { open, onOpenChange, defaultValues } = props;
+    const { open, onOpenChange, defaultValues, onSubmit } = props;
     const isEditing = !!defaultValues;
     const form = useForm<Task>({
         mode: "onChange",
@@ -63,7 +64,7 @@ export const EditTask: FC<Props> = (props) => {
                 <DialogDescription>Some desc</DialogDescription>
                 <Form {...form}>
                     <form
-                        onSubmit={handleSubmit((data) => console.log(data))}
+                        onSubmit={handleSubmit(onSubmit)}
                         className="space-y-4"
                     >
                         <FormField

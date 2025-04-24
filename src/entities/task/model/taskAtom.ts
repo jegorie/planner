@@ -1,5 +1,4 @@
-import { atom } from "jotai";
-import { splitAtom } from "jotai/utils";
+import { atom, type PrimitiveAtom } from "jotai";
 import { Priority, type Task } from "../types";
 
 export const defaultTask = {
@@ -11,8 +10,8 @@ export const defaultTask = {
     subTasksIds: [],
 };
 
-const initialData: Task[] = [
-    {
+const initialData: PrimitiveAtom<Task>[] = [
+    atom<Task>({
         id: "1111-1111-1111-1111",
         checked: true,
         desc: "",
@@ -20,8 +19,8 @@ const initialData: Task[] = [
         labels: ["Work", "Home"],
         priority: Priority.high,
         subTasksIds: [],
-    },
-    {
+    }),
+    atom<Task>({
         id: "2222-2222-2222-2222",
         checked: false,
         title: "Очень важный текст",
@@ -29,8 +28,7 @@ const initialData: Task[] = [
         labels: ["School"],
         priority: Priority.none,
         subTasksIds: [],
-    },
+    }),
 ];
 
-export const taskAtoms = atom<Task[]>(initialData);
-export const taskAtom = splitAtom(taskAtoms);
+export const taskAtoms = atom<PrimitiveAtom<Task>[]>(initialData);

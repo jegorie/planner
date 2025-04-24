@@ -1,10 +1,8 @@
 import { Button } from "@/shared/ui/button";
 import { PlusIcon, TagIcon } from "lucide-react";
-import { useAtom } from "jotai";
-import { useState } from "react";
-
+import { atom, useAtom, useStore } from "jotai";
+import { useMemo, useState } from "react";
 import { Check } from "lucide-react";
-
 import { cn } from "@/shared/lib/utils";
 import {
     Command,
@@ -17,7 +15,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { labelAtoms } from "@/entities/label/atoms/allLabelsAtom";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
-import type { Label } from "@/entities/label/types";
 import {
     Drawer,
     DrawerContent,
@@ -36,7 +33,6 @@ export const EditLabels: React.FC<Props> = (props) => {
     const { labels, setLabels } = props;
     const [search, setSearch] = useState("");
     const [open, setOpen] = useState(false);
-    const [availableLabels, setAvailableLabels] = useAtom(labelAtoms);
 
     const isMobile = useIsMobile();
 
@@ -60,8 +56,6 @@ export const EditLabels: React.FC<Props> = (props) => {
                             search={search}
                             setSearch={setSearch}
                             setOpen={setOpen}
-                            availableLabels={availableLabels}
-                            setAvailableLabels={setAvailableLabels}
                             labels={labels}
                             setLabels={setLabels}
                         />
@@ -83,8 +77,6 @@ export const EditLabels: React.FC<Props> = (props) => {
                     search={search}
                     setSearch={setSearch}
                     setOpen={setOpen}
-                    availableLabels={availableLabels}
-                    setAvailableLabels={setAvailableLabels}
                     labels={labels}
                     setLabels={setLabels}
                 />
@@ -97,22 +89,19 @@ type CommandProps = {
     search: string;
     setSearch: (search: string) => void;
     setOpen: (open: boolean) => void;
-    availableLabels: Label[];
-    setAvailableLabels: (labels: Label[]) => void;
     labels: string[] | undefined;
     setLabels: (labels: string[]) => void;
 };
 
 const EditLabelsCommand: React.FC<CommandProps> = (props) => {
-    const {
-        search,
-        setSearch,
-        setOpen,
-        availableLabels,
-        setAvailableLabels,
-        labels,
-        setLabels,
-    } = props;
+    const { search, setSearch, setOpen, labels, setLabels } = props;
+
+    const store = useStore();
+    const [availableLabelAtoms, setAvailableLabelAtoms] = useAtom(labelAtoms);
+    const availableLabels = useMemo(
+        () => availableLabelAtoms.map((item) => store.get(item)),
+        [store.get, availableLabelAtoms],
+    );
 
     return (
         <Command>
@@ -131,9 +120,9 @@ const EditLabelsCommand: React.FC<CommandProps> = (props) => {
                             className="mt-1"
                             onClick={() => {
                                 setLabels([...(labels ?? []), search]);
-                                setAvailableLabels([
-                                    ...availableLabels,
-                                    { title: search, color: "black" },
+                                setAvailableLabelAtoms([
+                                    ...availableLabelAtoms,
+                                    atom({ title: search, color: "black" }),
                                 ]);
                                 setOpen(false);
                             }}
