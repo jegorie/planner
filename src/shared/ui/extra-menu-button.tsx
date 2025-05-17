@@ -13,7 +13,7 @@ type Props = {
     children: ReactNode;
 };
 
-export const ExtraMenu: FC<Props> = (props) => {
+export const ExtraMenuButton: FC<Props> = (props) => {
     const { children } = props;
 
     return (

@@ -27,6 +27,7 @@ import {
 import { cn } from "@/shared/lib/utils";
 import type { ReactNode } from "react";
 import { ModeToggle } from "@/shared/ui/mode-toggle";
+import { Link } from "@tanstack/react-router";
 
 // This is sample data.
 const data = {
@@ -85,36 +86,39 @@ const itemsArr: {
     icon: ReactNode;
 }[] = [
     {
-        to: "inbox",
+        to: "/",
         title: "Inbox",
         color: "blue",
         icon: <InboxIcon className="size-4" />,
     },
     {
-        to: "today",
+        to: "/today",
         title: "Today",
         color: "green",
         icon: <StarIcon className="size-4" />,
     },
     {
-        to: "scheduled",
+        to: "/scheduled",
         title: "Scheduled",
         color: "purple",
         icon: <CalendarDaysIcon className="size-4" />,
     },
     {
-        to: "labels",
+        to: "/labels",
         title: "Labels",
         color: "orange",
         icon: <TagIcon className="size-4" />,
     },
 ];
 
-const Item = ({
-    title,
-    icon,
-    color,
-}: { title: string; icon: ReactNode; color: TAvailableColors }) => {
+const Item = (props: {
+    title: string;
+    icon: ReactNode;
+    color: TAvailableColors;
+    to: string;
+}) => {
+    const { title, icon, color, to } = props;
+
     const colorsMap = {
         blue: "text-blue-card bg-blue-card-foreground hover:bg-blue-card-action",
         green: "text-green-card bg-green-card-foreground hover:bg-green-card-action",
@@ -123,7 +127,8 @@ const Item = ({
     } as const;
 
     return (
-        <div
+        <Link
+            to={to}
             className={cn(
                 "p-2 rounded-sm font-bold text-sm cursor-pointer transition-colors hover:shadow",
                 colorsMap[color],
@@ -131,7 +136,7 @@ const Item = ({
         >
             {icon}
             <div>{title}</div>
-        </div>
+        </Link>
     );
 };
 

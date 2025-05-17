@@ -10,66 +10,85 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as IndexImport } from "./routes/index";
+import { Route as rootRoute } from './routes/__root'
+import { Route as LabelsImport } from './routes/labels'
+import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
 
+const LabelsRoute = LabelsImport.update({
+  id: '/labels',
+  path: '/labels',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
-    id: "/",
-    path: "/",
-    getParentRoute: () => rootRoute,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
-    interface FileRoutesByPath {
-        "/": {
-            id: "/";
-            path: "/";
-            fullPath: "/";
-            preLoaderRoute: typeof IndexImport;
-            parentRoute: typeof rootRoute;
-        };
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
     }
+    '/labels': {
+      id: '/labels'
+      path: '/labels'
+      fullPath: '/labels'
+      preLoaderRoute: typeof LabelsImport
+      parentRoute: typeof rootRoute
+    }
+  }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-    "/": typeof IndexRoute;
+  '/': typeof IndexRoute
+  '/labels': typeof LabelsRoute
 }
 
 export interface FileRoutesByTo {
-    "/": typeof IndexRoute;
+  '/': typeof IndexRoute
+  '/labels': typeof LabelsRoute
 }
 
 export interface FileRoutesById {
-    __root__: typeof rootRoute;
-    "/": typeof IndexRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/labels': typeof LabelsRoute
 }
 
 export interface FileRouteTypes {
-    fileRoutesByFullPath: FileRoutesByFullPath;
-    fullPaths: "/";
-    fileRoutesByTo: FileRoutesByTo;
-    to: "/";
-    id: "__root__" | "/";
-    fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/labels'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/labels'
+  id: '__root__' | '/' | '/labels'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-    IndexRoute: typeof IndexRoute;
+  IndexRoute: typeof IndexRoute
+  LabelsRoute: typeof LabelsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-    IndexRoute: IndexRoute,
-};
+  IndexRoute: IndexRoute,
+  LabelsRoute: LabelsRoute,
+}
 
 export const routeTree = rootRoute
-    ._addFileChildren(rootRouteChildren)
-    ._addFileTypes<FileRouteTypes>();
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -77,11 +96,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/labels"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/labels": {
+      "filePath": "labels.tsx"
     }
   }
 }

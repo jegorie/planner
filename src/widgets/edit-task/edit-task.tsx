@@ -21,8 +21,8 @@ import { Priority, type Task } from "@/entities/task/types";
 import { TextareaAutosize } from "@/shared/ui/textarea";
 import { EditPriority } from "@/features/edit-priority";
 import { EditLabels } from "@/features/edit-labels/edit-labels";
-import { Labels } from "@/entities/task/ui/task-card/labels";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { FilteredLabelCards } from "@/entities/label/ui/filtered-label-cards";
 
 type Props = {
     open: boolean;
@@ -100,7 +100,7 @@ export const EditTask: FC<Props> = (props) => {
                                 </FormItem>
                             )}
                         />
-                        <Labels labels={watch("labels")} />
+                        <FilteredLabelCards labels={watch("labels")} />
                         <div className="flex gap-2 justify-between">
                             <div />
                             <div className="flex">

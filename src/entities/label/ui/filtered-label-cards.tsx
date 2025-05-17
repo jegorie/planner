@@ -2,46 +2,15 @@ import { useAtomValue, useStore } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
 import { labelAtoms } from "@/entities/label/atoms/allLabelsAtom";
 import { cn } from "@/shared/lib/utils";
-import type { Label as TLabel } from "@/entities/label/types";
 import { useMemo } from "react";
-
-const Label: React.FC<TLabel> = (props) => {
-    const { title } = props;
-
-    return (
-        <motion.div
-            transition={{ duration: 0.1 }}
-            initial={{
-                width: 0,
-                opacity: 0,
-                paddingLeft: 0,
-                paddingRight: 0,
-            }}
-            animate={{
-                width: "auto",
-                opacity: 1,
-                paddingLeft: 8,
-                paddingRight: 8,
-            }}
-            exit={{
-                width: 0,
-                opacity: 0,
-                paddingLeft: 0,
-                paddingRight: 0,
-            }}
-            className="text-xs border rounded py-1 px-2 bg-primary-foreground shrink-0 overflow-hidden text-nowrap"
-        >
-            {title}
-        </motion.div>
-    );
-};
+import { LabelCard } from "@/entities/label/ui/label-card";
 
 type Props = {
     labels: string[];
     className?: string;
 };
 
-export const Labels: React.FC<Props> = (props) => {
+export const FilteredLabelCards: React.FC<Props> = (props) => {
     const { labels, className } = props;
     const store = useStore();
     const availableLabelAtoms = useAtomValue(labelAtoms);
@@ -57,7 +26,7 @@ export const Labels: React.FC<Props> = (props) => {
         });
 
     return (
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
             {!!filteredLabels?.length && (
                 <motion.div
                     initial={{
@@ -77,9 +46,9 @@ export const Labels: React.FC<Props> = (props) => {
                     }}
                     className={cn("flex gap-1", className)}
                 >
-                    <AnimatePresence>
+                    <AnimatePresence initial={false}>
                         {filteredLabels.map((label) => {
-                            return <Label key={label.title} {...label} />;
+                            return <LabelCard key={label.title} {...label} />;
                         })}
                     </AnimatePresence>
                 </motion.div>

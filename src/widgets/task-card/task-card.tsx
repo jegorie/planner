@@ -14,14 +14,14 @@ import { cn } from "@/shared/lib/utils";
 import { useAtom, useAtomValue, type PrimitiveAtom } from "jotai";
 import { Title } from "@/entities/task/ui/task-card/title";
 import { Desc } from "@/entities/task/ui/task-card/desc";
-import { Labels } from "@/entities/task/ui/task-card/labels";
 import { Toolbar } from "@/entities/task/ui/task-card/toolbar/toolbar";
 import { Button } from "@/shared/ui/button";
 import { EditLabels } from "@/features/edit-labels/edit-labels";
 import { EditPriority } from "@/features/edit-priority";
 import { focusAtom } from "jotai-optics";
-import { ExtraMenu } from "@/entities/task/ui/task-card/extra-menu";
 import { DeleteTaskDropDownItem } from "@/features/delete-task/ui/delete-task-dropdown-item";
+import { ExtraMenuButton } from "@/shared/ui/extra-menu-button";
+import { FilteredLabelCards } from "@/entities/label/ui/filtered-label-cards";
 
 type Props = {
     atom: PrimitiveAtom<Task>;
@@ -58,7 +58,7 @@ export const TaskCard: React.FC<Props> = (props) => {
         >
             <div className="flex items-start justify-between">
                 <Checked atom={atom} />
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                     {!isOpen && (
                         <motion.div
                             initial={{
@@ -104,7 +104,7 @@ export const TaskCard: React.FC<Props> = (props) => {
             <AnimatePresence>
                 {isOpen && <Desc atom={atom} isOpen={isOpen} />}
             </AnimatePresence>
-            <Labels labels={labels} className="mt-1 ml-7" />
+            <FilteredLabelCards labels={labels} className="mt-1 ml-7" />
             <AnimatePresence>
                 {isOpen && (
                     <Toolbar isOpen={isOpen}>
@@ -130,11 +130,11 @@ export const TaskCard: React.FC<Props> = (props) => {
                             <Button variant="ghost" size="icon" disabled>
                                 <PinIcon />
                             </Button>
-                            <ExtraMenu>
+                            <ExtraMenuButton>
                                 <DeleteTaskDropDownItem
                                     onClick={handleDelete}
                                 />
-                            </ExtraMenu>
+                            </ExtraMenuButton>
                         </div>
                     </Toolbar>
                 )}
