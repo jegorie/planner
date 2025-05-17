@@ -45,7 +45,7 @@ type NeverEnd = {
 
 export type Schedule = {
     date: string;
-    repeat: {
+    repeat?: {
         type: RepeatPeriods;
     } & {
         type: RepeatPeriods.custom;

@@ -23,6 +23,7 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/shared/ui/drawer";
+import type { Label } from "@/entities/label/types";
 
 type Props = {
     labels: string[] | undefined;
@@ -122,7 +123,12 @@ const EditLabelsCommand: React.FC<CommandProps> = (props) => {
                                 setLabels([...(labels ?? []), search]);
                                 setAvailableLabelAtoms([
                                     ...availableLabelAtoms,
-                                    atom({ title: search, color: "black" }),
+                                    atom<Label>({
+                                        title: search,
+                                        color: "none",
+                                        // TODO: generate new id
+                                        id: "test",
+                                    }),
                                 ]);
                                 setOpen(false);
                             }}

@@ -2,7 +2,6 @@ import { Checked } from "@/entities/task/ui/task-card/checked";
 import type { Task } from "@/entities/task/types";
 import {
     AlarmClockIcon,
-    CalendarDaysIcon,
     ChevronUpIcon,
     PaperclipIcon,
     PinIcon,
@@ -10,7 +9,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { cn } from "@/shared/lib/utils";
+import { cn, formatSmartDate } from "@/shared/lib/utils";
 import { useAtom, useAtomValue, type PrimitiveAtom } from "jotai";
 import { Title } from "@/entities/task/ui/task-card/title";
 import { Desc } from "@/entities/task/ui/task-card/desc";
@@ -22,6 +21,7 @@ import { focusAtom } from "jotai-optics";
 import { DeleteTaskDropDownItem } from "@/features/delete-task/ui/delete-task-dropdown-item";
 import { ExtraMenuButton } from "@/shared/ui/extra-menu-button";
 import { FilteredLabelCards } from "@/entities/label/ui/filtered-label-cards";
+import { EditSchedule } from "@/features/edit-schedule/ui/edit-schedule";
 
 type Props = {
     atom: PrimitiveAtom<Task>;
@@ -42,6 +42,7 @@ export const TaskCard: React.FC<Props> = (props) => {
             return focusAtom(atom, (optic) => optic.prop("labels"));
         }, [atom]),
     );
+    const date = task.schedule?.date;
 
     const handleDelete = () => {
         onDeleteClick(task.id);
@@ -59,7 +60,7 @@ export const TaskCard: React.FC<Props> = (props) => {
             <div className="flex items-start justify-between">
                 <Checked atom={atom} />
                 <AnimatePresence initial={false}>
-                    {!isOpen && (
+                    {!isOpen && date && (
                         <motion.div
                             initial={{
                                 width: 0,
@@ -79,7 +80,7 @@ export const TaskCard: React.FC<Props> = (props) => {
                             className="overflow-hidden shrink-0"
                         >
                             <div className="px-2 py-1 text-xs border rounded text-nowrap">
-                                today 19:00
+                                {formatSmartDate(date)}
                             </div>
                         </motion.div>
                     )}
@@ -108,10 +109,7 @@ export const TaskCard: React.FC<Props> = (props) => {
             <AnimatePresence>
                 {isOpen && (
                     <Toolbar isOpen={isOpen}>
-                        <Button variant="ghost" disabled>
-                            <CalendarDaysIcon />
-                            Schedule
-                        </Button>
+                        <EditSchedule atom={atom} />
                         <div>
                             <Button variant="ghost" size="icon" disabled>
                                 <PlusIcon />
