@@ -110,24 +110,29 @@ export const TaskCard: React.FC<Props> = (props) => {
                 {isOpen && (
                     <Toolbar isOpen={isOpen}>
                         <EditSchedule atom={atom} />
-                        <div>
-                            <Button variant="ghost" size="icon" disabled>
-                                <PlusIcon />
-                            </Button>
-                            <Button variant="ghost" size="icon" disabled>
-                                <PaperclipIcon />
-                            </Button>
-                            <EditLabels labels={labels} setLabels={setLabels} />
-                            <EditPriority
-                                currentPriority={currentPriority}
-                                setCurrentPriority={setCurrentPriority}
-                            />
-                            <Button variant="ghost" size="icon" disabled>
-                                <AlarmClockIcon />
-                            </Button>
-                            <Button variant="ghost" size="icon" disabled>
-                                <PinIcon />
-                            </Button>
+                        <div className="flex justify-between sm:justify-start">
+                            <div>
+                                <Button variant="ghost" size="icon" disabled>
+                                    <PlusIcon />
+                                </Button>
+                                <Button variant="ghost" size="icon" disabled>
+                                    <PaperclipIcon />
+                                </Button>
+                                <EditLabels
+                                    labels={labels}
+                                    setLabels={setLabels}
+                                />
+                                <EditPriority
+                                    currentPriority={currentPriority}
+                                    setCurrentPriority={setCurrentPriority}
+                                />
+                                <Button variant="ghost" size="icon" disabled>
+                                    <AlarmClockIcon />
+                                </Button>
+                                <Button variant="ghost" size="icon" disabled>
+                                    <PinIcon />
+                                </Button>
+                            </div>
                             <ExtraMenuButton>
                                 <DeleteTaskDropDownItem
                                     onClick={handleDelete}
