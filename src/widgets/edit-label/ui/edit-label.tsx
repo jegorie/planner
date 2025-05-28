@@ -53,10 +53,12 @@ export const EditLabel: FC<Props> = (props) => {
     const form = useForm<Label>({
         mode: "onChange",
         defaultValues: {
+            id: "",
             title: "",
             color: "none",
             ...defaultValues,
         },
+        values: { id: "", title: "", color: "none", ...defaultValues },
     });
     const { control, reset, handleSubmit } = form;
 
