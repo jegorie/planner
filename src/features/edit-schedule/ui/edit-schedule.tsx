@@ -2,23 +2,24 @@ import { Button } from "@/shared/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import {
     CalendarDaysIcon,
-    ChevronLeftIcon,
     ChevronRightIcon,
+    ClockIcon,
     RepeatIcon,
     StarIcon,
     XIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { format, addDays, addWeeks } from "date-fns";
-import { motion } from "motion/react";
 
-import styles from "./edit-schedule.module.css";
+import styles from "./styles.module.css";
 import { cn, formatSmartDate } from "@/shared/lib/utils";
 import { Separator } from "@/shared/ui/separator";
-import { Calendar } from "@/shared/ui/calendar";
 import { useAtom, type PrimitiveAtom } from "jotai";
-import type { Task } from "@/entities/task/types";
+import { RepeatPeriods, type Task } from "@/entities/task/types";
 import { focusAtom } from "jotai-optics";
+import { EditCalendar } from "./edit-calendar";
+import { SwitchCardParent } from "@/shared/ui/switch-card";
+import { EditRepeatTime } from "./edit-repeat-time";
 
 type Props = {
     atom: PrimitiveAtom<Task>;
@@ -33,6 +34,8 @@ export const EditSchedule: React.FC<Props> = (props) => {
     );
     const [open, setOpen] = useState(false);
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+    const [isRepeatTimeOpen, setIsRepeatTimeOpen] = useState(false);
+    const hideMainMenu = isDatePickerOpen || isRepeatTimeOpen;
 
     const handleSelect = (selected: Date | undefined) => {
         if (selected === undefined) {
@@ -46,8 +49,14 @@ export const EditSchedule: React.FC<Props> = (props) => {
     useEffect(() => {
         if (!open) {
             setIsDatePickerOpen(false);
+            setIsRepeatTimeOpen(false);
         }
     }, [open]);
+
+    console.log(
+        schedule?.repeat?.type && RepeatPeriods[schedule?.repeat?.type],
+        RepeatPeriods[0],
+    );
 
     return (
         <div className="group relative">
@@ -66,14 +75,12 @@ export const EditSchedule: React.FC<Props> = (props) => {
                     }
                     align="start"
                 >
-                    <div
-                        className={cn(
-                            "flex flex-col border-0 transition-all rounded p-2 origin-center bg-popover easy-in-out delay-100 w-64 shrink-0",
-                            {
-                                "scale-95 rounded-md delay-0 opacity-50":
-                                    isDatePickerOpen,
-                            },
-                        )}
+                    <SwitchCardParent
+                        width={256}
+                        isOpen={hideMainMenu}
+                        className={cn("border-0 rounded p-2 bg-popover", {
+                            "rounded-md": hideMainMenu,
+                        })}
                     >
                         <Button
                             variant="ghost"
@@ -117,7 +124,7 @@ export const EditSchedule: React.FC<Props> = (props) => {
                             variant="ghost"
                             className="justify-between font-normal px-3"
                             onClick={() => {
-                                setIsDatePickerOpen((prev) => !prev);
+                                setIsDatePickerOpen(true);
                             }}
                         >
                             <div className="flex gap-2 items-center">
@@ -129,8 +136,31 @@ export const EditSchedule: React.FC<Props> = (props) => {
                             <div className="flex gap-2 items-center">
                                 {schedule?.date && (
                                     <span className="text-primary/50">
-                                        {" "}
                                         {format(schedule.date, "dd MMM")}
+                                    </span>
+                                )}
+                                <ChevronRightIcon />
+                            </div>
+                        </Button>
+                        <Separator className="my-1" />
+                        <Button
+                            variant="ghost"
+                            className="justify-between font-normal px-3"
+                            onClick={() => setIsRepeatTimeOpen(true)}
+                        >
+                            <div className="flex gap-2 items-center">
+                                <RepeatIcon
+                                    className={cn(
+                                        "text-muted-foreground",
+                                        styles.calendarIconNextWeek,
+                                    )}
+                                />
+                                Repeat
+                            </div>
+                            <div className="flex gap-2 items-center">
+                                {typeof schedule?.repeat?.type === "number" && (
+                                    <span className="text-primary/50">
+                                        {RepeatPeriods[schedule.repeat.type]}
                                     </span>
                                 )}
                                 <ChevronRightIcon />
@@ -144,76 +174,25 @@ export const EditSchedule: React.FC<Props> = (props) => {
                             }
                             className="justify-start font-normal"
                         >
-                            <RepeatIcon
+                            <ClockIcon
                                 className={cn(
                                     "text-muted-foreground",
                                     styles.calendarIconNextWeek,
                                 )}
                             />
-                            Repeat
+                            Time
                         </Button>
-                        <Separator className="my-1" />
-                    </div>
-                    <motion.div
-                        transition={{
-                            delay: isDatePickerOpen ? 0.1 : 0,
-                            type: "tween",
-                            duration: 0.15,
-                        }}
-                        initial={{
-                            height: 214,
-                            translateX: 0,
-                        }}
-                        animate={{
-                            height: isDatePickerOpen ? "auto" : 214,
-                            translateX: isDatePickerOpen ? "-100%" : 0,
-                        }}
-                        exit={{
-                            height: 214,
-                            translateX: 0,
-                        }}
-                        className={cn(
-                            "bg-popover w-64 easy-in-out p-2 flex flex-col shrink-0",
-                        )}
-                    >
-                        <Button
-                            variant="ghost"
-                            className="justify-start font-normal f-full"
-                            onClick={() => {
-                                setIsDatePickerOpen(false);
-                            }}
-                        >
-                            <ChevronLeftIcon
-                                className={cn(
-                                    "text-muted-foreground",
-                                    styles.calendarIconNextWeek,
-                                )}
-                            />
-                            Back
-                        </Button>
-                        <Separator className="my-1" />
-                        <Calendar
-                            disabled={{ before: new Date() }}
-                            mode="single"
-                            selected={
-                                schedule?.date
-                                    ? new Date(schedule.date)
-                                    : undefined
-                            }
-                            onSelect={(day) => {
-                                if (day === undefined) {
-                                    setSchedule(undefined);
-                                    return;
-                                }
-                                setSchedule((prev) => ({
-                                    ...prev,
-                                    date: day.toISOString(),
-                                }));
-                                setIsDatePickerOpen(false);
-                            }}
-                            className="px-0 mx-auto"
-                        />
-                    </motion.div>
+                    </SwitchCardParent>
+                    <EditCalendar
+                        atom={atom}
+                        isOpen={isDatePickerOpen}
+                        setIsOpen={setIsDatePickerOpen}
+                    />
+                    <EditRepeatTime
+                        isOpen={isRepeatTimeOpen}
+                        setIsOpen={setIsRepeatTimeOpen}
+                        atom={atom}
+                    />
                 </PopoverContent>
             </Popover>
             {schedule && (

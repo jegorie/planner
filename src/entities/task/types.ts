@@ -5,7 +5,7 @@ export enum Priority {
     none = 4,
 }
 
-enum RepeatPeriods {
+export enum RepeatPeriods {
     none = 0,
     daily = 1,
     weekly = 2,
@@ -43,15 +43,21 @@ type NeverEnd = {
     type: EndType.never;
 };
 
+type End = OnAfterEnd | OnDateEnd | NeverEnd;
+
+export type Repeat =
+    | {
+          type: Exclude<RepeatPeriods, RepeatPeriods.custom>;
+      }
+    | {
+          type: RepeatPeriods.custom;
+          every: { type: CustomRepeatPeriods; count: number };
+          end: End;
+      };
+
 export type Schedule = {
     date: string;
-    repeat?: {
-        type: RepeatPeriods;
-    } & {
-        type: RepeatPeriods.custom;
-        every: { type: CustomRepeatPeriods; count: number };
-        end: OnAfterEnd | OnDateEnd | NeverEnd;
-    };
+    repeat?: Repeat;
 };
 
 export type Task = {

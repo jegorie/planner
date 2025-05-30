@@ -15,3 +15,6 @@ export function formatSmartDate(date: DateArg<Date>): string {
 
     return isSameYear ? base : `${base} ${format(date, "yy")}`; // 17 May 26
 }
+
+export const getCapitalizedString = (value: string) =>
+    value.charAt(0).toUpperCase() + value.slice(1);
