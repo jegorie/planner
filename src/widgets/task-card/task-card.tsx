@@ -55,6 +55,7 @@ export const TaskCard: React.FC<Props> = (props) => {
                 {
                     "p-3 border-primary shadow-xl bg-primary-foreground":
                         isOpen,
+                    "active:scale-90 sm:active:scale-[98%]": !isOpen,
                 },
             )}
             onClick={() => {

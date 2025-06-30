@@ -35,7 +35,7 @@ function App() {
                     <div className="text-xl font-bold">Task</div>
                 </div>
             </header>
-            <main className="flex flex-col items-center gap-5 px-5 relative flex-auto">
+            <main className="flex flex-col items-center gap-5 px-5 relative flex-auto pb-32">
                 <NewTaskButton onClick={() => setIsEditTaskOpen(true)} />
                 {tasks.map((atom) => (
                     <AnimatePresence key={atom.toString()}>
