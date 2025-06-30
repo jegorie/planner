@@ -1,7 +1,6 @@
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Calendar } from "@/shared/ui/calendar";
-import { Separator } from "@radix-ui/react-separator";
 import { ChevronLeftIcon } from "lucide-react";
 import styles from "./styles.module.css";
 import { useAtom, type PrimitiveAtom } from "jotai";
@@ -9,6 +8,7 @@ import { useMemo } from "react";
 import { focusAtom } from "jotai-optics";
 import type { Task } from "@/entities/task/types";
 import { SwitchCardChild } from "@/shared/ui/switch-card";
+import { Separator } from "@/shared/ui/separator";
 
 type Props = {
     isOpen: boolean;
