@@ -50,9 +50,13 @@ export const TaskCard: React.FC<Props> = (props) => {
 
     return (
         <div
-            className={cn("max-w-4xl w-full rounded-lg transition-all", {
-                "p-3 border shadow bg-primary-foreground": isOpen,
-            })}
+            className={cn(
+                "max-w-4xl w-full rounded-lg transition-all p-1 shadow-non",
+                {
+                    "p-3 border-primary shadow-xl bg-primary-foreground":
+                        isOpen,
+                },
+            )}
             onClick={() => {
                 !isOpen && setIsOpen(true);
             }}
