@@ -3,17 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button";
 import { QrCode } from "lucide-react";
 import { AnimatePresence, MotionConfig } from "motion/react";
-import {
-    createFileRoute,
-    Link,
-    redirect,
-    useParams,
-    useRouterState,
-} from "@tanstack/react-router";
+import { createFileRoute, redirect, useParams } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import useMeasure from "react-use-measure";
 import { cn } from "@/shared/lib/utils";
-import { Input } from "@/shared/ui/input";
+import { SignInForm } from "@/widgets/auth/ui/signin-form";
+import { SignUpForm } from "@/widgets/auth/ui/signup-form";
+import { FadeCard } from "@/shared/ui/animations/fade-card";
 
 // Inline SVG for Google logo
 const GoogleLogo: React.FC<{ className?: string }> = ({ className }) => (
@@ -45,11 +41,8 @@ const GoogleLogo: React.FC<{ className?: string }> = ({ className }) => (
     </svg>
 );
 
-const DURATION = 0.5;
-// Main Auth Card Component
 export const AuthCard: React.FC = () => {
     const { type } = useParams({ from: "/_withoutSidebar/auth/$type" });
-    const [ref, { height }] = useMeasure();
 
     return (
         <div className="flex flex-col gap-6 min-h-svh w-full items-center justify-center p-4">
@@ -61,61 +54,18 @@ export const AuthCard: React.FC = () => {
                 </CardHeader>
                 <CardContent className="px-0">
                     <div className="px-6 mb-4 grid gap-4">
-                        <Button variant="secondary">
+                        <Button variant="secondary" disabled>
                             <GoogleLogo className="mr-2" />
                             With Google
                         </Button>
-                        <Button variant="secondary">
+                        <Button variant="secondary" disabled>
                             <QrCode className="mr-2" />
                             With QR Code
                         </Button>
                     </div>
-                    <MotionConfig transition={{ duration: DURATION }}>
-                        <motion.div
-                            animate={{
-                                height: height || "auto",
-                                transition: { delay: DURATION / 2 },
-                            }}
-                            className="overflow-hidden relative"
-                        >
-                            <AnimatePresence initial={false}>
-                                <motion.div
-                                    key={type}
-                                    initial={{
-                                        opacity: 0,
-                                        filter: "blur(4px)",
-                                    }}
-                                    animate={{
-                                        opacity: 1,
-                                        filter: "blur(0px)",
-                                        transition: {
-                                            duration: DURATION / 2,
-                                            delay: DURATION / 2,
-                                        },
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        filter: "blur(4px)",
-                                        transition: { duration: DURATION / 2 },
-                                    }}
-                                >
-                                    <div
-                                        ref={ref}
-                                        className={cn("px-6 pb-6", {
-                                            "absolute left-0 right-0": height,
-                                            relative: !height,
-                                        })}
-                                    >
-                                        {type === "signin" ? (
-                                            <SignInForm />
-                                        ) : (
-                                            <SignUpForm />
-                                        )}
-                                    </div>
-                                </motion.div>
-                            </AnimatePresence>
-                        </motion.div>
-                    </MotionConfig>
+                    <FadeCard triggerKey={type} className="px-6 pb-6">
+                        {type === "signin" ? <SignInForm /> : <SignUpForm />}
+                    </FadeCard>
                 </CardContent>
             </Card>
             <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
@@ -126,71 +76,6 @@ export const AuthCard: React.FC = () => {
         </div>
     );
 };
-
-function SignInForm() {
-    return (
-        <form className="grid gap-4">
-            <div className="grid gap-1">
-                <label htmlFor="email">Email</label>
-                <Input id="email" type="email" />
-            </div>
-            <div className="grid gap-1">
-                <div className="flex justify-between">
-                    <label htmlFor="password">Password</label>
-                    <a href="#" className="text-sm">
-                        Forgot your password?
-                    </a>
-                </div>
-                <Input id="password" type="password" />
-            </div>
-            <Button type="submit">Sign in</Button>
-            <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <Link
-                    to="/auth/$type"
-                    params={{ type: "signup" }}
-                    className="underline underline-offset-4"
-                >
-                    Sign up
-                </Link>
-            </div>
-        </form>
-    );
-}
-
-function SignUpForm() {
-    return (
-        <form className="grid gap-4">
-            <div className="grid gap-1">
-                <label htmlFor="email">Email</label>
-                <Input id="email" type="email" />
-            </div>
-            <div className="grid gap-1">
-                <label htmlFor="nickname">Nickname</label>
-                <Input id="nickname" type="text" />
-            </div>
-            <div className="grid gap-1">
-                <label htmlFor="password">Password</label>
-                <Input id="password" type="password" />
-            </div>
-            <div className="grid gap-1">
-                <label htmlFor="repeat-password">Repeat Password</label>
-                <Input id="repeat-password" type="password" />
-            </div>
-            <Button type="submit">Sign Up</Button>
-            <div className="text-center text-sm">
-                Have an account?{" "}
-                <Link
-                    to="/auth/$type"
-                    params={{ type: "signin" }}
-                    className="underline underline-offset-4"
-                >
-                    Sign in
-                </Link>
-            </div>
-        </form>
-    );
-}
 
 export const Route = createFileRoute("/_withoutSidebar/auth/$type")({
     parseParams: ({ type }) => {
