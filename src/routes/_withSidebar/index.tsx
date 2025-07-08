@@ -9,7 +9,7 @@ import { EditTask } from "@/widgets/edit-task/edit-task";
 import type { Task } from "@/entities/task/types";
 import { AnimatePresence } from "motion/react";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_withSidebar/")({
     component: App,
 });
 

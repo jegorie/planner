@@ -11,20 +11,33 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as LabelsImport } from './routes/labels'
-import { Route as IndexImport } from './routes/index'
+import { Route as WithSidebarImport } from './routes/_withSidebar'
+import { Route as WithSidebarIndexImport } from './routes/_withSidebar/index'
+import { Route as WithSidebarLabelsImport } from './routes/_withSidebar/labels'
+import { Route as WithoutSidebarAuthTypeImport } from './routes/_withoutSidebar/auth.$type'
 
 // Create/Update Routes
 
-const LabelsRoute = LabelsImport.update({
-  id: '/labels',
-  path: '/labels',
+const WithSidebarRoute = WithSidebarImport.update({
+  id: '/_withSidebar',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const WithSidebarIndexRoute = WithSidebarIndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => WithSidebarRoute,
+} as any)
+
+const WithSidebarLabelsRoute = WithSidebarLabelsImport.update({
+  id: '/labels',
+  path: '/labels',
+  getParentRoute: () => WithSidebarRoute,
+} as any)
+
+const WithoutSidebarAuthTypeRoute = WithoutSidebarAuthTypeImport.update({
+  id: '/_withoutSidebar/auth/$type',
+  path: '/auth/$type',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -32,18 +45,32 @@ const IndexRoute = IndexImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_withSidebar': {
+      id: '/_withSidebar'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof WithSidebarImport
       parentRoute: typeof rootRoute
     }
-    '/labels': {
-      id: '/labels'
+    '/_withSidebar/labels': {
+      id: '/_withSidebar/labels'
       path: '/labels'
       fullPath: '/labels'
-      preLoaderRoute: typeof LabelsImport
+      preLoaderRoute: typeof WithSidebarLabelsImport
+      parentRoute: typeof WithSidebarImport
+    }
+    '/_withSidebar/': {
+      id: '/_withSidebar/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof WithSidebarIndexImport
+      parentRoute: typeof WithSidebarImport
+    }
+    '/_withoutSidebar/auth/$type': {
+      id: '/_withoutSidebar/auth/$type'
+      path: '/auth/$type'
+      fullPath: '/auth/$type'
+      preLoaderRoute: typeof WithoutSidebarAuthTypeImport
       parentRoute: typeof rootRoute
     }
   }
@@ -51,39 +78,63 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface WithSidebarRouteChildren {
+  WithSidebarLabelsRoute: typeof WithSidebarLabelsRoute
+  WithSidebarIndexRoute: typeof WithSidebarIndexRoute
+}
+
+const WithSidebarRouteChildren: WithSidebarRouteChildren = {
+  WithSidebarLabelsRoute: WithSidebarLabelsRoute,
+  WithSidebarIndexRoute: WithSidebarIndexRoute,
+}
+
+const WithSidebarRouteWithChildren = WithSidebarRoute._addFileChildren(
+  WithSidebarRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/labels': typeof LabelsRoute
+  '': typeof WithSidebarRouteWithChildren
+  '/labels': typeof WithSidebarLabelsRoute
+  '/': typeof WithSidebarIndexRoute
+  '/auth/$type': typeof WithoutSidebarAuthTypeRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/labels': typeof LabelsRoute
+  '/labels': typeof WithSidebarLabelsRoute
+  '/': typeof WithSidebarIndexRoute
+  '/auth/$type': typeof WithoutSidebarAuthTypeRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/labels': typeof LabelsRoute
+  '/_withSidebar': typeof WithSidebarRouteWithChildren
+  '/_withSidebar/labels': typeof WithSidebarLabelsRoute
+  '/_withSidebar/': typeof WithSidebarIndexRoute
+  '/_withoutSidebar/auth/$type': typeof WithoutSidebarAuthTypeRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/labels'
+  fullPaths: '' | '/labels' | '/' | '/auth/$type'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/labels'
-  id: '__root__' | '/' | '/labels'
+  to: '/labels' | '/' | '/auth/$type'
+  id:
+    | '__root__'
+    | '/_withSidebar'
+    | '/_withSidebar/labels'
+    | '/_withSidebar/'
+    | '/_withoutSidebar/auth/$type'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  LabelsRoute: typeof LabelsRoute
+  WithSidebarRoute: typeof WithSidebarRouteWithChildren
+  WithoutSidebarAuthTypeRoute: typeof WithoutSidebarAuthTypeRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  LabelsRoute: LabelsRoute,
+  WithSidebarRoute: WithSidebarRouteWithChildren,
+  WithoutSidebarAuthTypeRoute: WithoutSidebarAuthTypeRoute,
 }
 
 export const routeTree = rootRoute
@@ -96,15 +147,27 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/labels"
+        "/_withSidebar",
+        "/_withoutSidebar/auth/$type"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_withSidebar": {
+      "filePath": "_withSidebar.tsx",
+      "children": [
+        "/_withSidebar/labels",
+        "/_withSidebar/"
+      ]
     },
-    "/labels": {
-      "filePath": "labels.tsx"
+    "/_withSidebar/labels": {
+      "filePath": "_withSidebar/labels.tsx",
+      "parent": "/_withSidebar"
+    },
+    "/_withSidebar/": {
+      "filePath": "_withSidebar/index.tsx",
+      "parent": "/_withSidebar"
+    },
+    "/_withoutSidebar/auth/$type": {
+      "filePath": "_withoutSidebar/auth.$type.tsx"
     }
   }
 }
