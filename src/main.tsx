@@ -8,6 +8,7 @@ import { routeTree } from "./routeTree.gen";
 import "./styles.css";
 import reportWebVitals from "./reportWebVitals.ts";
 import { ThemeProvider } from "@/shared/providers/theme-provider.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Create a new router instance
 const router = createRouter({
@@ -18,6 +19,8 @@ const router = createRouter({
     defaultStructuralSharing: true,
     defaultPreloadStaleTime: 0,
 });
+
+const queryClient = new QueryClient();
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {
@@ -32,9 +35,11 @@ if (rootElement && !rootElement.innerHTML) {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
         <StrictMode>
-            <ThemeProvider defaultTheme="system" storageKey="ui-theme">
-                <RouterProvider router={router} />
-            </ThemeProvider>
+            <QueryClientProvider client={queryClient}>
+                <ThemeProvider defaultTheme="system" storageKey="ui-theme">
+                    <RouterProvider router={router} />
+                </ThemeProvider>
+            </QueryClientProvider>
         </StrictMode>,
     );
 }

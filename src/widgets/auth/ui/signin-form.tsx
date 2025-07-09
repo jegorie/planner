@@ -5,6 +5,22 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SigninSchema } from "../utils/schema";
 import { HelperText } from "@/shared/ui/helper-text";
+import { useMutation } from "@tanstack/react-query";
+import ky from "ky";
+import { useEffect } from "react";
+
+const api = ky.create({
+    prefixUrl: "/api", // проксируется Vite
+    timeout: 5000,
+    hooks: {
+        afterResponse: [
+            (_request, _options, response) => {
+                // Логируем, чтобы видеть результат
+                console.log("▶  /api call:", response);
+            },
+        ],
+    },
+});
 
 export const SignInForm = () => {
     const {
@@ -12,16 +28,27 @@ export const SignInForm = () => {
         handleSubmit,
         formState: { errors },
     } = useForm({
-        defaultValues: { email: "", password: "" },
+        defaultValues: { email: "john@mail.ru", password: "password" },
         resolver: zodResolver(SigninSchema),
         mode: "onChange",
         reValidateMode: "onChange",
     });
+    const { mutate, isPending, data } = useMutation({
+        mutationFn: (data) => {
+            return api.post("auth/login", { json: data });
+        },
+    });
+
+    useEffect(() => {
+        api.get("tasks");
+    }, []);
+    console.log({ isPending, data });
 
     return (
         <form
             className="grid gap-4"
             onSubmit={handleSubmit((data) => {
+                mutate(data);
                 console.log(data);
             })}
         >
