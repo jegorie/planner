@@ -21,6 +21,7 @@ export default defineConfig({
             "@": resolve(__dirname, "./src"),
         },
     },
+    build: { sourcemap: "inline" },
     server: {
         proxy: {
             "/api": {

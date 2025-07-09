@@ -20,3 +20,5 @@ export const SignupSchema = SigninSchema.extend({
         error: "Password do not match",
     },
 );
+
+export type Signin = z.infer<typeof SigninSchema>;

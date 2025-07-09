@@ -3,45 +3,29 @@ import { Input } from "@/shared/ui/input";
 import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SigninSchema } from "../utils/schema";
+import { type Signin, SigninSchema } from "../utils/schema";
 import { HelperText } from "@/shared/ui/helper-text";
 import { useMutation } from "@tanstack/react-query";
-import ky from "ky";
-import { useEffect } from "react";
+import { useApi } from "@/shared/lib/api";
 
-const api = ky.create({
-    prefixUrl: "/api", // проксируется Vite
-    timeout: 5000,
-    hooks: {
-        afterResponse: [
-            (_request, _options, response) => {
-                // Логируем, чтобы видеть результат
-                console.log("▶  /api call:", response);
-            },
-        ],
-    },
-});
-
-export const SignInForm = () => {
+export const SigninForm = () => {
+    const api = useApi();
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm({
+    } = useForm<Signin>({
         defaultValues: { email: "john@mail.ru", password: "password" },
         resolver: zodResolver(SigninSchema),
         mode: "onChange",
         reValidateMode: "onChange",
     });
     const { mutate, isPending, data } = useMutation({
-        mutationFn: (data) => {
+        mutationFn: (data: Signin) => {
             return api.post("auth/login", { json: data });
         },
     });
 
-    useEffect(() => {
-        api.get("tasks");
-    }, []);
     console.log({ isPending, data });
 
     return (
@@ -49,7 +33,6 @@ export const SignInForm = () => {
             className="grid gap-4"
             onSubmit={handleSubmit((data) => {
                 mutate(data);
-                console.log(data);
             })}
         >
             <div className="grid gap-1">
@@ -71,7 +54,7 @@ export const SignInForm = () => {
                 />
                 <HelperText title={errors.password?.message} error />
             </div>
-            <Button type="submit" className="mt-2">
+            <Button type="submit" className="mt-2" disabled={isPending}>
                 Sign in
             </Button>
             <div className="text-center text-sm">

@@ -53,11 +53,6 @@ export const EditSchedule: React.FC<Props> = (props) => {
         }
     }, [open]);
 
-    console.log(
-        schedule?.repeat?.type && RepeatPeriods[schedule?.repeat?.type],
-        RepeatPeriods[0],
-    );
-
     return (
         <div className="group relative">
             <Popover open={open} onOpenChange={setOpen}>

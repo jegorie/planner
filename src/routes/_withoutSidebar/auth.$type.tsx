@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button";
 import { QrCode } from "lucide-react";
 import { createFileRoute, redirect, useParams } from "@tanstack/react-router";
-import { SignInForm } from "@/widgets/auth/ui/signin-form";
-import { SignUpForm } from "@/widgets/auth/ui/signup-form";
+import { SigninForm } from "@/widgets/auth/ui/signin-form";
+import { SignupForm } from "@/widgets/auth/ui/signup-form";
 import { FadeCard } from "@/shared/ui/animations/fade-card";
 
 // Inline SVG for Google logo
@@ -60,7 +60,7 @@ export const AuthCard: React.FC = () => {
                         </Button>
                     </div>
                     <FadeCard triggerKey={type} className="px-6 pb-6">
-                        {type === "signin" ? <SignInForm /> : <SignUpForm />}
+                        {type === "signin" ? <SigninForm /> : <SignupForm />}
                     </FadeCard>
                 </CardContent>
             </Card>

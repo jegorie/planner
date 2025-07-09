@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { SignupSchema } from "../utils/schema";
 import { HelperText } from "@/shared/ui/helper-text";
 
-export const SignUpForm = () => {
+export const SignupForm = () => {
     const {
         register,
         handleSubmit,

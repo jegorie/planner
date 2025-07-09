@@ -8,6 +8,8 @@ import { TaskCard } from "@/widgets/task-card/task-card";
 import { EditTask } from "@/widgets/edit-task/edit-task";
 import type { Task } from "@/entities/task/types";
 import { AnimatePresence } from "motion/react";
+import { useApi } from "@/shared/lib/api";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_withSidebar/")({
     component: App,
@@ -15,8 +17,15 @@ export const Route = createFileRoute("/_withSidebar/")({
 
 function App() {
     const [isEditTaskOpen, setIsEditTaskOpen] = useState(false);
+    const api = useApi();
     const [tasks, setTasks] = useAtom(taskAtoms);
     const store = useStore();
+    const serverdata = useQuery({
+        queryKey: ["tasks"],
+        queryFn: () => {
+            return api.get("tasks").json();
+        },
+    });
 
     const handleSubmit = (data: Task) => {
         setTasks((prev) => [...prev, atom(data)]);
@@ -26,6 +35,10 @@ function App() {
     const deleteTask = (id: string) => {
         setTasks((prev) => prev.filter((item) => store.get(item).id !== id));
     };
+
+    if (serverdata.isLoading) {
+        return "loading";
+    }
 
     return (
         <div className="flex-auto flex flex-col">
