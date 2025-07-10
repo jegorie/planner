@@ -8,16 +8,15 @@ import { TaskCard } from "@/widgets/task-card/task-card";
 import { EditTask } from "@/widgets/edit-task/edit-task";
 import type { Task } from "@/entities/task/types";
 import { AnimatePresence } from "motion/react";
-import { useApi } from "@/shared/lib/api";
+import { api } from "@/shared/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute("/_withSidebar/")({
+export const Route = createFileRoute("/_auth/_withSidebar/")({
     component: App,
 });
 
 function App() {
     const [isEditTaskOpen, setIsEditTaskOpen] = useState(false);
-    const api = useApi();
     const [tasks, setTasks] = useAtom(taskAtoms);
     const store = useStore();
     const serverdata = useQuery({

@@ -6,6 +6,10 @@ import { createFileRoute, redirect, useParams } from "@tanstack/react-router";
 import { SigninForm } from "@/widgets/auth/ui/signin-form";
 import { SignupForm } from "@/widgets/auth/ui/signup-form";
 import { FadeCard } from "@/shared/ui/animations/fade-card";
+import { z } from "zod/v4";
+import { useSetAtom } from "jotai";
+import { accessTokenAtom } from "@/entities/auth/atoms/tokenAtom";
+import { isAuthFailedAtom } from "@/entities/auth/atoms/isAuthFailedAtom";
 
 // Inline SVG for Google logo
 const GoogleLogo: React.FC<{ className?: string }> = ({ className }) => (
@@ -38,7 +42,17 @@ const GoogleLogo: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 export const AuthCard: React.FC = () => {
-    const { type } = useParams({ from: "/_withoutSidebar/auth/$type" });
+    const search = Route.useSearch();
+    const { type } = useParams({ from: "/_nonAuth/auth/$type" });
+    const navigate = Route.useNavigate();
+    const setToken = useSetAtom(accessTokenAtom);
+    const setIsAuthFailed = useSetAtom(isAuthFailedAtom);
+
+    const goToMainPage = (props: { accessToken: string }) => {
+        setToken(props.accessToken);
+        setIsAuthFailed(false);
+        navigate({ to: search.redirect || "/" });
+    };
 
     return (
         <div className="flex flex-col gap-6 min-h-svh w-full items-center justify-center p-4">
@@ -60,7 +74,11 @@ export const AuthCard: React.FC = () => {
                         </Button>
                     </div>
                     <FadeCard triggerKey={type} className="px-6 pb-6">
-                        {type === "signin" ? <SigninForm /> : <SignupForm />}
+                        {type === "signin" ? (
+                            <SigninForm onSuccess={goToMainPage} />
+                        ) : (
+                            <SignupForm />
+                        )}
                     </FadeCard>
                 </CardContent>
             </Card>
@@ -73,7 +91,10 @@ export const AuthCard: React.FC = () => {
     );
 };
 
-export const Route = createFileRoute("/_withoutSidebar/auth/$type")({
+export const Route = createFileRoute("/_nonAuth/auth/$type")({
+    validateSearch: z.object({
+        redirect: z.string().optional().catch(""),
+    }),
     parseParams: ({ type }) => {
         if (type !== "signin" && type !== "signup") {
             throw redirect({ to: "/auth/$type", params: { type: "signin" } });

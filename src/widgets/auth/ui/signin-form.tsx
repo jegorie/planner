@@ -6,10 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type Signin, SigninSchema } from "../utils/schema";
 import { HelperText } from "@/shared/ui/helper-text";
 import { useMutation } from "@tanstack/react-query";
-import { useApi } from "@/shared/lib/api";
+import { api } from "@/shared/lib/api";
 
-export const SigninForm = () => {
-    const api = useApi();
+type Props = {
+    onSuccess: (props: { accessToken: string }) => void;
+};
+
+export const SigninForm: React.FC<Props> = (props) => {
+    const { onSuccess } = props;
     const {
         register,
         handleSubmit,
@@ -20,13 +24,16 @@ export const SigninForm = () => {
         mode: "onChange",
         reValidateMode: "onChange",
     });
-    const { mutate, isPending, data } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: (data: Signin) => {
-            return api.post("auth/login", { json: data });
+            return api
+                .post<{ accessToken: string }>("auth/login", {
+                    json: data,
+                })
+                .json();
         },
+        onSuccess,
     });
-
-    console.log({ isPending, data });
 
     return (
         <form

@@ -9,7 +9,7 @@ import { atom, useAtom, useStore, type PrimitiveAtom } from "jotai";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/_withSidebar/labels")({
+export const Route = createFileRoute("/_auth/_withSidebar/labels")({
     component: RouteComponent,
 });
 
