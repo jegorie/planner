@@ -13,7 +13,7 @@ import {
     CommandList,
 } from "@/shared/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { labelAtoms } from "@/entities/label/atoms/allLabelsAtom";
+import { labelAtoms } from "@/entities/label/atoms/all-labels-atom";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
     Drawer,

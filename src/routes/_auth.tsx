@@ -1,4 +1,4 @@
-import { isAuthFailedAtom } from "@/entities/auth/atoms/isAuthFailedAtom";
+import { isAuthFailedAtom } from "@/entities/auth/atoms/is-auth-failed-atom";
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 

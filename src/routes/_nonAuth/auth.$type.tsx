@@ -8,8 +8,8 @@ import { SignupForm } from "@/widgets/auth/ui/signup-form";
 import { FadeCard } from "@/shared/ui/animations/fade-card";
 import { z } from "zod/v4";
 import { useSetAtom } from "jotai";
-import { accessTokenAtom } from "@/entities/auth/atoms/tokenAtom";
-import { isAuthFailedAtom } from "@/entities/auth/atoms/isAuthFailedAtom";
+import { accessTokenAtom } from "@/entities/auth/atoms/token-atom";
+import { isAuthFailedAtom } from "@/entities/auth/atoms/is-auth-failed-atom";
 
 // Inline SVG for Google logo
 const GoogleLogo: React.FC<{ className?: string }> = ({ className }) => (

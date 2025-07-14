@@ -1,4 +1,4 @@
-import { taskAtoms } from "@/entities/task/model/taskAtom";
+import { taskAtoms } from "@/entities/task/model/task-atom";
 import { SidebarTrigger } from "@/shared/ui/sidebar";
 import { createFileRoute } from "@tanstack/react-router";
 import { atom, useAtom, useStore } from "jotai";

@@ -1,7 +1,7 @@
 import ky from "ky";
-import { accessTokenAtom } from "@/entities/auth/atoms/tokenAtom";
+import { accessTokenAtom } from "@/entities/auth/atoms/token-atom";
 import { getDefaultStore } from "jotai";
-import { isAuthFailedAtom } from "@/entities/auth/atoms/isAuthFailedAtom";
+import { isAuthFailedAtom } from "@/entities/auth/atoms/is-auth-failed-atom";
 
 const store = getDefaultStore();
 

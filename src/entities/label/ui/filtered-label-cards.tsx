@@ -1,6 +1,6 @@
 import { useAtomValue, useStore } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
-import { labelAtoms } from "@/entities/label/atoms/allLabelsAtom";
+import { labelAtoms } from "@/entities/label/atoms/all-labels-atom";
 import { cn } from "@/shared/lib/utils";
 import { useMemo } from "react";
 import { LabelCard } from "@/entities/label/ui/label-card";

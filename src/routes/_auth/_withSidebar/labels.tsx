@@ -1,4 +1,4 @@
-import { labelAtoms } from "@/entities/label/atoms/allLabelsAtom";
+import { labelAtoms } from "@/entities/label/atoms/all-labels-atom";
 import type { Label } from "@/entities/label/types";
 import { Button } from "@/shared/ui/button";
 import { SidebarTrigger } from "@/shared/ui/sidebar";
