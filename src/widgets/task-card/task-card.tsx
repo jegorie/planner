@@ -51,13 +51,11 @@ export const TaskCard: React.FC<Props> = (props) => {
     return (
         <div
             className={cn(
-                "max-w-4xl w-full rounded-lg transition-all p-1 shadow-non",
+                "max-w-4xl w-full rounded-lg transition-all p-1 shadow-none",
                 {
-                    "p-3 border-primary shadow-xl bg-primary-foreground":
+                    "p-3 shadow-xl bg-primary-foreground border border-primary/5":
                         isOpen,
-                    // "active:scale-90 sm:active:scale-[98%]": !isOpen,
-                    "active:scale-90 sm:active:scale-[98%] cursor-pointer":
-                        !isOpen,
+                    "cursor-pointer": !isOpen,
                 },
             )}
             onClick={() => {
