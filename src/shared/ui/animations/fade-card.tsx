@@ -9,18 +9,19 @@ type Props = {
     children?: ReactNode | null;
     triggerKey: string;
     className?: string;
+    duration?: number;
 };
 
 export const FadeCard: React.FC<Props> = (props) => {
-    const { children, triggerKey, className } = props;
+    const { children, triggerKey, className, duration = DURATION } = props;
     const [ref, { height }] = useMeasure();
 
     return (
-        <MotionConfig transition={{ duration: DURATION }}>
+        <MotionConfig transition={{ duration }}>
             <motion.div
                 animate={{
                     height: height || "auto",
-                    transition: { delay: DURATION / 2 },
+                    transition: { delay: duration / 2 },
                 }}
                 className="overflow-hidden relative"
             >
@@ -35,14 +36,14 @@ export const FadeCard: React.FC<Props> = (props) => {
                             opacity: 1,
                             filter: "blur(0px)",
                             transition: {
-                                duration: DURATION / 2,
-                                delay: DURATION / 2,
+                                duration: duration / 2,
+                                delay: duration / 2,
                             },
                         }}
                         exit={{
                             opacity: 0,
                             filter: "blur(4px)",
-                            transition: { duration: DURATION / 2 },
+                            transition: { duration: duration / 2 },
                         }}
                     >
                         <div
