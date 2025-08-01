@@ -10,9 +10,7 @@ import type { Task } from "@/entities/task/types";
 import { AnimatePresence } from "motion/react";
 import { api } from "@/shared/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui/button";
-import { FadeCard } from "@/shared/ui/animations/fade-card";
+import { TasksFilter } from "@/features/task-filter/ui/task-filter";
 
 export const Route = createFileRoute("/_auth/_withSidebar/")({
     component: App,
@@ -86,42 +84,3 @@ function App() {
         </div>
     );
 }
-
-const TasksFilter = () => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    return (
-        <div
-            className={cn(
-                "sticky top-2 mx-auto border bg-primary-foreground/50 p-4 transition-all duration-300 z-10 min-h-9",
-                {
-                    ["bg-primary-foreground/50 backdrop-blur p-4 rounded-lg w-full max-w-4xl shadow-xl"]:
-                        isOpen,
-                },
-                {
-                    ["bg-primary-foreground/10 backdrop-blur-xs px-3 py-1 rounded-2xl w-full max-w-xs shadow-xs hover:bg-primary-foreground"]:
-                        !isOpen,
-                },
-            )}
-            onClick={() => setIsOpen((prev) => !prev)}
-        >
-            <FadeCard triggerKey={isOpen.toString()} duration={0.15}>
-                {isOpen ? (
-                    <div className="flex gap-2 items-center">
-                        <Button size={"sm"} variant={"outline"}>
-                            Sort Order
-                        </Button>
-                        <Button size={"sm"} variant={"outline"}>
-                            Sort Order
-                        </Button>
-                        <Button size={"sm"} variant={"outline"}>
-                            Sort Order
-                        </Button>
-                    </div>
-                ) : (
-                    <div className="">ASC</div>
-                )}
-            </FadeCard>
-        </div>
-    );
-};
