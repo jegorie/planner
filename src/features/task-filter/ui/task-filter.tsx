@@ -179,23 +179,31 @@ export const TasksFilter = () => {
                 ) : (
                     <div className="flex gap-4 justify-center">
                         <div>
-                            <span className="text-sm">Sorting:</span>{" "}
+                            <span className="text-sm text-primary/50">
+                                Sorting:
+                            </span>{" "}
                             <span className="font-medium">
                                 {coundSortingEl}
                             </span>
                         </div>
                         <div>
-                            <span className="text-sm">Sort by:</span>{" "}
+                            <span className="text-sm text-primary/50">
+                                Sort by:
+                            </span>{" "}
                             <span className="font-medium">
                                 {getCapitalizedString(sortBy)}
                             </span>
                         </div>
-                        <div>
-                            <span className="text-sm">Order:</span>{" "}
-                            <span className="font-medium">
-                                {getCapitalizedString(sortOrder)}
-                            </span>
-                        </div>
+                        {sortBy !== "custom" && (
+                            <div>
+                                <span className="text-sm text-primary/50">
+                                    Order:
+                                </span>{" "}
+                                <span className="font-medium">
+                                    {getCapitalizedString(sortOrder)}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 )}
             </FadeCard>
