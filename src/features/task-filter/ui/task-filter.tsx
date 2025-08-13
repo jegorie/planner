@@ -67,7 +67,7 @@ export const TasksFilter = () => {
             { value: "title", label: "Title" },
             { value: "priority", label: "Priority" },
             { value: "createdAt", label: "Created" },
-            { value: "schedule", label: "Schedule" },
+            { value: "date", label: "Date" },
         ];
 
         const sortOrderOptions: FilterOption[] = [
@@ -136,17 +136,31 @@ export const TasksFilter = () => {
         >
             <FadeCard triggerKey={isOpen.toString()} duration={0.15}>
                 {isOpen ? (
-                    <div className="flex gap-3 items-center py-4 flex-wrap">
-                        {filterConfigs.map((config, index) => (
-                            <FilterSelect
-                                key={index}
-                                label={config.label}
-                                value={config.value}
-                                onValueChange={config.onValueChange}
-                                options={config.options}
-                                placeholder={config.placeholder}
-                            />
-                        ))}
+                    <div className="flex items-center py-4 flex-wrap gap-10">
+                        <div className="flex items-center py-4 flex-wrap gap-3 flex-7/12">
+                            {filterConfigs.slice(0, 3).map((config, index) => (
+                                <FilterSelect
+                                    key={index}
+                                    label={config.label}
+                                    value={config.value}
+                                    onValueChange={config.onValueChange}
+                                    options={config.options}
+                                    placeholder={config.placeholder}
+                                />
+                            ))}
+                        </div>
+                        <div className="flex items-center py-4 flex-wrap gap-3 flex-4/12">
+                            {filterConfigs.slice(2).map((config, index) => (
+                                <FilterSelect
+                                    key={index}
+                                    label={config.label}
+                                    value={config.value}
+                                    onValueChange={config.onValueChange}
+                                    options={config.options}
+                                    placeholder={config.placeholder}
+                                />
+                            ))}
+                        </div>
                     </div>
                 ) : (
                     <div className="flex gap-4 justify-center">

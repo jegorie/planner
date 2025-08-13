@@ -27,12 +27,12 @@ export const FilterSelect = ({
     placeholder,
 }: FilterSelectProps) => {
     return (
-        <div className="flex items-center gap-2 flex-auto">
-            <span className="text-sm font-medium">{label}:</span>
+        <div className="flex-1">
+            <span className="text-sm font-medium text-primary/50">{label}</span>
             <Select value={value} onValueChange={onValueChange}>
                 <SelectTrigger
                     size="sm"
-                    className="bg-primary-foreground flex-auto sm:max-w-[200px]"
+                    className="bg-primary-foreground flex-auto w-full"
                 >
                     <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
