@@ -2,47 +2,55 @@ import { labelAtoms } from "@/entities/label/atoms/all-labels-atom";
 import { Priority } from "@/entities/task/types";
 import { cn, getCapitalizedString } from "@/shared/lib/utils";
 import { FadeCard } from "@/shared/ui/animations/fade-card";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useStore } from "jotai";
 import { useState, useMemo, useCallback } from "react";
 import {
     selectedLabelsAtom,
     selectedPriorityAtom,
+    selectedDateAtom,
     sortByAtom,
     sortOrderAtom,
     type SortBy,
 } from "../model/filter-atoms";
 import { FilterSelect, type FilterOption } from "./filter-select";
+import { FilterDatePicker } from "./filter-date-picker";
 
 export const TasksFilter = () => {
+    const store = useStore();
     const [isOpen, setIsOpen] = useState(false);
 
     // Filter atoms
     const [selectedLabels, setSelectedLabels] = useAtom(selectedLabelsAtom);
     const [selectedPriority, setSelectedPriority] =
         useAtom(selectedPriorityAtom);
+    const [selectedDate, setSelectedDate] = useAtom(selectedDateAtom);
     const [sortBy, setSortBy] = useAtom(sortByAtom);
     const [sortOrder, setSortOrder] = useAtom(sortOrderAtom);
 
     // Labels data
     const labelAtomsArray = useAtomValue(labelAtoms);
-    const labelValues = labelAtomsArray.map((atom) => useAtomValue(atom));
+    const labelValues = useMemo(() => {
+        return labelAtomsArray.map((atom) => store.get(atom));
+    }, [labelAtomsArray, store.get]);
 
     // Helper for single label selection (legacy UI support)
     const selectedLabel =
         selectedLabels.length === 1 ? selectedLabels[0] : "all";
-    const setSelectedLabel = useCallback(() => {
+    const setSelectedLabel = useCallback(
         (value: string) => {
             if (value === "all") {
                 setSelectedLabels([]);
             } else {
-                console.log("SET", value);
                 setSelectedLabels([value]);
             }
-        };
-    }, [setSelectedLabels]);
+        },
+        [setSelectedLabels],
+    );
 
     const coundSortingEl =
-        +(selectedLabel !== "all") + +(selectedPriority !== "all");
+        +(selectedLabel !== "all") +
+        +(selectedPriority !== "all") +
+        +(selectedDate !== "all");
 
     // Filter configurations for rendering
     const filterConfigs = useMemo(() => {
@@ -124,7 +132,7 @@ export const TasksFilter = () => {
             className={cn(
                 "sticky top-2 mx-auto border bg-primary-foreground/50 transition-all duration-300 z-10",
                 {
-                    ["bg-primary-foreground/50 backdrop-blur px-4 rounded-lg w-full max-w-4xl shadow-xl"]:
+                    ["bg-primary-foreground/50 backdrop-blur rounded-lg w-full max-w-4xl shadow-xl"]:
                         isOpen,
                 },
                 {
@@ -136,9 +144,9 @@ export const TasksFilter = () => {
         >
             <FadeCard triggerKey={isOpen.toString()} duration={0.15}>
                 {isOpen ? (
-                    <div className="flex items-center py-4 flex-wrap gap-10">
-                        <div className="flex items-center py-4 flex-wrap gap-3 flex-7/12">
-                            {filterConfigs.slice(0, 3).map((config, index) => (
+                    <div className="flex items-center py-4 px-4 flex-wrap gap-10">
+                        <div className="flex items-center flex-wrap gap-3 flex-7/12">
+                            {filterConfigs.slice(0, 2).map((config, index) => (
                                 <FilterSelect
                                     key={index}
                                     label={config.label}
@@ -148,8 +156,14 @@ export const TasksFilter = () => {
                                     placeholder={config.placeholder}
                                 />
                             ))}
+                            <FilterDatePicker
+                                label="Date"
+                                value={selectedDate}
+                                onValueChange={setSelectedDate}
+                                placeholder="All dates"
+                            />
                         </div>
-                        <div className="flex items-center py-4 flex-wrap gap-3 flex-4/12">
+                        <div className="flex items-center flex-wrap gap-3 flex-4/12">
                             {filterConfigs.slice(2).map((config, index) => (
                                 <FilterSelect
                                     key={index}

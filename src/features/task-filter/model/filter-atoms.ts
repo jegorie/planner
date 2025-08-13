@@ -7,6 +7,7 @@ export type SortOrder = "asc" | "desc";
 export type TaskFilters = {
     labels: string[]; // Array of label IDs ("all" means no filter)
     priority: Priority | "all";
+    date: Date | "all";
     sortBy: SortBy;
     sortOrder: SortOrder;
 };
@@ -14,6 +15,7 @@ export type TaskFilters = {
 // Individual filter atoms
 export const selectedLabelsAtom = atom<string[]>([]);
 export const selectedPriorityAtom = atom<Priority | "all">("all");
+export const selectedDateAtom = atom<Date | "all">("all");
 export const sortByAtom = atom<SortBy>("title");
 export const sortOrderAtom = atom<SortOrder>("asc");
 
@@ -21,6 +23,7 @@ export const sortOrderAtom = atom<SortOrder>("asc");
 export const taskFiltersAtom = atom<TaskFilters>((get) => ({
     labels: get(selectedLabelsAtom),
     priority: get(selectedPriorityAtom),
+    date: get(selectedDateAtom),
     sortBy: get(sortByAtom),
     sortOrder: get(sortOrderAtom),
 }));
@@ -31,6 +34,7 @@ export const isFilterActiveAtom = atom<boolean>((get) => {
     return (
         filters.labels.length > 0 ||
         filters.priority !== "all" ||
+        filters.date !== "all" ||
         filters.sortBy !== "title" ||
         filters.sortOrder !== "asc"
     );
@@ -40,6 +44,7 @@ export const isFilterActiveAtom = atom<boolean>((get) => {
 export const resetFiltersAtom = atom(null, (get, set) => {
     set(selectedLabelsAtom, []);
     set(selectedPriorityAtom, "all");
+    set(selectedDateAtom, "all");
     set(sortByAtom, "title");
     set(sortOrderAtom, "asc");
 });
