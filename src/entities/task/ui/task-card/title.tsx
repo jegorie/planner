@@ -42,12 +42,12 @@ export const Title: React.FC<Props> = (props) => {
                 defaultValue={new Delta().insert(title)}
                 onTextChange={() => {
                     if (quillRef.current) {
-                        setTitle(
-                            quillRef.current?.getText(
-                                0,
-                                quillRef.current.getLength(),
-                            ),
+                        const newTitle = quillRef.current?.getText(
+                            0,
+                            quillRef.current.getLength(),
                         );
+                        console.log('📝 Title changed:', { oldTitle: title, newTitle });
+                        setTitle(newTitle);
                     }
                 }}
                 quillOptions={{ theme: "bubble", modules: { toolbar: false } }}

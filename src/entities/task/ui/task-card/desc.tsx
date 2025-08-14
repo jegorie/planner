@@ -49,12 +49,12 @@ export const Desc: React.FC<Props> = (props) => {
                 defaultValue={new Delta().insert(desc || "")}
                 onTextChange={() => {
                     if (quillRef.current) {
-                        setDesc(
-                            quillRef.current?.getText(
-                                0,
-                                quillRef.current.getLength(),
-                            ),
+                        const newDesc = quillRef.current?.getText(
+                            0,
+                            quillRef.current.getLength(),
                         );
+                        console.log('📝 Desc changed:', { oldDesc: desc, newDesc });
+                        setDesc(newDesc);
                     }
                 }}
                 quillOptions={{ theme: "bubble", modules: { toolbar: false } }}

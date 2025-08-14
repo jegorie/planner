@@ -1,54 +1,39 @@
-import { taskAtoms } from "@/entities/task/model/task-atom";
 import { SidebarTrigger } from "@/shared/ui/sidebar";
 import { createFileRoute } from "@tanstack/react-router";
-import { atom, useAtom, useSetAtom, useStore } from "jotai";
 import { NewTaskButton } from "@/entities/task/ui/new-task-button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TaskCard } from "@/widgets/task-card/task-card";
 import { EditTask } from "@/widgets/edit-task/edit-task";
 import type { Task } from "@/entities/task/types";
 import { AnimatePresence } from "motion/react";
-import { api } from "@/shared/lib/api";
-import { useQuery } from "@tanstack/react-query";
 import { TasksFilter } from "@/features/task-filter/ui/task-filter";
+import { useTasksSync } from "@/entities/task/hooks/use-tasks-sync";
+import { useTaskAutoSave } from "@/entities/task/hooks/use-task-auto-save";
 
 export const Route = createFileRoute("/_auth/_withSidebar/")({
     component: App,
 });
 
-const useTasksQuery = () =>
-    useQuery({
-        queryKey: ["tasks"],
-        queryFn: () => {
-            return api.get<Task[]>("tasks").json();
-        },
-    });
-
-const useInit = () => {
-    const setTasks = useSetAtom(taskAtoms);
-    const { data } = useTasksQuery();
-
-    useEffect(() => {
-        if (data) {
-            setTasks(data.map((item) => atom(item)));
-        }
-    }, [data, setTasks]);
-};
-
 function App() {
     const [isEditTaskOpen, setIsEditTaskOpen] = useState(false);
-    const [tasks, setTasks] = useAtom(taskAtoms);
-    const store = useStore();
-    const { isLoading } = useTasksQuery();
-    useInit();
 
-    const handleSubmit = (data: Task) => {
-        setTasks((prev) => [...prev, atom(data)]);
+    const {
+        tasks,
+        isLoading,
+        createTask,
+        deleteTask: deleteTaskMutation,
+    } = useTasksSync();
+
+    // Автоматическое сохранение изменений
+    const { isPending: isSyncing } = useTaskAutoSave();
+
+    const handleSubmit = (data: Omit<Task, "id">) => {
+        createTask(data);
         setIsEditTaskOpen(false);
     };
 
     const deleteTask = (id: string) => {
-        setTasks((prev) => prev.filter((item) => store.get(item).id !== id));
+        deleteTaskMutation(id);
     };
 
     if (isLoading) {
@@ -61,6 +46,12 @@ function App() {
                 <div className="flex items-center gap-2 px-4">
                     <SidebarTrigger className="-ml-1" />
                     <div className="text-xl font-bold">Task</div>
+                    {isSyncing && (
+                        <div className="text-sm text-muted-foreground flex items-center gap-1">
+                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                            Синхронизация...
+                        </div>
+                    )}
                 </div>
             </header>
             <main className="flex flex-col items-center gap-5 px-5 relative flex-auto pb-32 h-[2000px]">
