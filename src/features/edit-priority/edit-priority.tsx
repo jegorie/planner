@@ -55,22 +55,22 @@ export const EditPriority: React.FC<Props> = (props) => {
                     </DrawerHeader>
                     <div className="mt-4 border-t text-base p-2 flex flex-col gap-1">
                         <PriorityItem
-                            priority={Priority.high}
+                            priority={Priority.HIGH}
                             currentPriority={currentPriority}
                             onChange={handlePrioritySelect}
                         />
                         <PriorityItem
-                            priority={Priority.medium}
+                            priority={Priority.MEDIUM}
                             currentPriority={currentPriority}
                             onChange={handlePrioritySelect}
                         />
                         <PriorityItem
-                            priority={Priority.low}
+                            priority={Priority.LOW}
                             currentPriority={currentPriority}
                             onChange={handlePrioritySelect}
                         />
                         <PriorityItem
-                            priority={Priority.none}
+                            priority={Priority.NONE}
                             currentPriority={currentPriority}
                             onChange={handlePrioritySelect}
                         />
@@ -94,20 +94,20 @@ export const EditPriority: React.FC<Props> = (props) => {
                 <SelectGroup>
                     <SelectLabel>Priority</SelectLabel>
                     <PrioritySelectItem
-                        value={Priority.high.toString()}
-                        priority={Priority.high}
+                        value={Priority.HIGH.toString()}
+                        priority={Priority.HIGH}
                     />
                     <PrioritySelectItem
-                        value={Priority.medium.toString()}
-                        priority={Priority.medium}
+                        value={Priority.MEDIUM.toString()}
+                        priority={Priority.MEDIUM}
                     />
                     <PrioritySelectItem
-                        value={Priority.low.toString()}
-                        priority={Priority.low}
+                        value={Priority.LOW.toString()}
+                        priority={Priority.LOW}
                     />
                     <PrioritySelectItem
-                        value={Priority.none.toString()}
-                        priority={Priority.none}
+                        value={Priority.NONE.toString()}
+                        priority={Priority.NONE}
                     />
                 </SelectGroup>
             </SelectContent>

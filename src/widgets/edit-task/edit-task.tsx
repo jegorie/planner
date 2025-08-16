@@ -38,7 +38,7 @@ export const EditTask: FC<Props> = (props) => {
     const form = useForm<Task>({
         mode: "onChange",
         defaultValues: {
-            priority: Priority.none,
+            priority: Priority.NONE,
             checked: false,
             title: "",
             desc: "",

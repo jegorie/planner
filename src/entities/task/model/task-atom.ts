@@ -6,7 +6,7 @@ export const defaultTask = {
     desc: "",
     title: "",
     labels: [],
-    priority: Priority.low,
+    priority: Priority.LOW,
     subTasksIds: [],
 };
 

@@ -15,7 +15,7 @@ type Props = {
     atom: PrimitiveAtom<Task>;
 };
 
-type BasicRepeatPeriods = Exclude<RepeatPeriods, RepeatPeriods.custom>;
+type BasicRepeatPeriods = Exclude<RepeatPeriods, RepeatPeriods.CUSTOM>;
 
 type RepeatButtonProps = {
     handleRepeat: (value: BasicRepeatPeriods) => void;
@@ -46,7 +46,7 @@ export const EditRepeatTime: React.FC<Props> = (props) => {
     const currentRepeat = schedule?.repeat?.type;
 
     const handleRepeat = (
-        type: Exclude<RepeatPeriods, RepeatPeriods.custom>,
+        type: Exclude<RepeatPeriods, RepeatPeriods.CUSTOM>,
     ) => {
         setSchedule((prev) => ({
             date: prev?.date || new Date().toISOString(),
@@ -80,28 +80,28 @@ export const EditRepeatTime: React.FC<Props> = (props) => {
             </Button>
             <Separator className="my-1" />
             <RepeatButton
-                repeatPeriod={RepeatPeriods.daily}
+                repeatPeriod={RepeatPeriods.DAILY}
                 currentRepeat={currentRepeat}
                 handleRepeat={handleRepeat}
             />
             <RepeatButton
-                repeatPeriod={RepeatPeriods.weekly}
+                repeatPeriod={RepeatPeriods.WEEKLY}
                 currentRepeat={currentRepeat}
                 handleRepeat={handleRepeat}
             />
             <RepeatButton
-                repeatPeriod={RepeatPeriods.monthly}
+                repeatPeriod={RepeatPeriods.MONTHLY}
                 currentRepeat={currentRepeat}
                 handleRepeat={handleRepeat}
             />
             <RepeatButton
-                repeatPeriod={RepeatPeriods.yearly}
+                repeatPeriod={RepeatPeriods.YEARLY}
                 currentRepeat={currentRepeat}
                 handleRepeat={handleRepeat}
             />
             <Separator className="my-1" />
             <RepeatButton
-                repeatPeriod={RepeatPeriods.none}
+                repeatPeriod={RepeatPeriods.NONE}
                 handleRepeat={handleRepeat}
             />
             <Button variant="ghost" className="justify-between" disabled>

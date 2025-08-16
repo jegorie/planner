@@ -1,56 +1,56 @@
 export enum Priority {
-    high = 1,
-    medium = 2,
-    low = 3,
-    none = 4,
+    HIGH = "HIGH",
+    MEDIUM = "MEDIUM",
+    LOW = "LOW",
+    NONE = "NONE",
 }
 
 export enum RepeatPeriods {
-    none = 0,
-    daily = 1,
-    weekly = 2,
-    monthly = 3,
-    yearly = 4,
-    custom = 5,
+    NONE = 0,
+    DAILY = 1,
+    WEEKLY = 2,
+    MONTHLY = 3,
+    YEARLY = 4,
+    CUSTOM = 5,
 }
 
 enum CustomRepeatPeriods {
-    minute = 1,
-    hours = 2,
-    daily = 3,
-    weekly = 4,
-    monthly = 5,
-    yearly = 6,
+    MINUTE = 1,
+    HOURS = 2,
+    DAILY = 3,
+    WEEKLY = 4,
+    MONTHLY = 5,
+    YEARLY = 6,
 }
 
 enum EndType {
-    never = 0,
-    onDate = 1,
-    after = 2,
+    NEVER = 0,
+    ON_DATE = 1,
+    AFTER = 2,
 }
 
 type OnDateEnd = {
-    type: EndType.onDate;
+    type: EndType.ON_DATE;
     date: string;
 };
 
 type OnAfterEnd = {
-    type: EndType.after;
+    type: EndType.AFTER;
     count: number;
 };
 
 type NeverEnd = {
-    type: EndType.never;
+    type: EndType.NEVER;
 };
 
 type End = OnAfterEnd | OnDateEnd | NeverEnd;
 
 export type Repeat =
     | {
-          type: Exclude<RepeatPeriods, RepeatPeriods.custom>;
+          type: Exclude<RepeatPeriods, RepeatPeriods.CUSTOM>;
       }
     | {
-          type: RepeatPeriods.custom;
+          type: RepeatPeriods.CUSTOM;
           every: { type: CustomRepeatPeriods; count: number };
           end: End;
       };

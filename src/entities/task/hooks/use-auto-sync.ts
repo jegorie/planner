@@ -17,7 +17,7 @@ export const useAutoSync = ({ debounceMs = 1000 }: UseAutoSyncProps = {}) => {
             // Отправляем batch обновления
             return Promise.all(
                 tasks.map((task) =>
-                    api.put(`tasks/${task.id}`, { json: task }).json<Task>(),
+                    api.patch(`tasks/${task.id}`, { json: task }).json<Task>(),
                 ),
             );
         },
@@ -25,7 +25,7 @@ export const useAutoSync = ({ debounceMs = 1000 }: UseAutoSyncProps = {}) => {
             // После успешного обновления очищаем pending updates
             pendingUpdatesRef.current.clear();
             // Обновляем кэш
-            queryClient.invalidateQueries({ queryKey: ["tasks"] });
+            // queryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
     });
 
@@ -89,4 +89,3 @@ export const useAutoSync = ({ debounceMs = 1000 }: UseAutoSyncProps = {}) => {
         hasPendingUpdates: pendingUpdatesRef.current.size > 0,
     };
 };
-

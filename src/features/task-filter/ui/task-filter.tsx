@@ -64,10 +64,10 @@ export const TasksFilter = () => {
 
         const priorityOptions: FilterOption[] = [
             { value: "all", label: "All priorities" },
-            { value: Priority.high.toString(), label: "High" },
-            { value: Priority.medium.toString(), label: "Medium" },
-            { value: Priority.low.toString(), label: "Low" },
-            { value: Priority.none.toString(), label: "None" },
+            { value: Priority.HIGH.toString(), label: "High" },
+            { value: Priority.MEDIUM.toString(), label: "Medium" },
+            { value: Priority.LOW.toString(), label: "Low" },
+            { value: Priority.NONE.toString(), label: "None" },
         ];
 
         const sortByOptions: FilterOption[] = [

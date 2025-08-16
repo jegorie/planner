@@ -14,10 +14,10 @@ export const PriorityIcon: FC<Props> = (props) => {
     return (
         <FlagIcon
             className={cn(className || "", {
-                "stroke-red-500": priority === Priority.high,
-                "stroke-orange-500": priority === Priority.medium,
-                "stroke-blue-500": priority === Priority.low,
-                "stroke-primary": priority === Priority.none,
+                "stroke-red-500": priority === Priority.HIGH,
+                "stroke-orange-500": priority === Priority.MEDIUM,
+                "stroke-blue-500": priority === Priority.LOW,
+                "stroke-primary": priority === Priority.NONE,
             })}
         />
     );
