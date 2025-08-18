@@ -15,15 +15,10 @@ export const useCurrentProjectsSync = (props?: Props) => {
         (projectId: string) => {
             navigate({
                 from: "/",
-                search: (prev) => {
-                    const next = { ...prev };
-                    if (!projectId) {
-                        delete next.projectId;
-                    } else {
-                        next.projectId = projectId;
-                    }
-                    return next;
-                },
+                search: (prev) => ({
+                    ...prev,
+                    ...(projectId ? { projectId } : {}),
+                }),
                 replace: true,
             });
         },
