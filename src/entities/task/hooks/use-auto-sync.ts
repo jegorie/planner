@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "@/shared/lib/api";
 import type { Task } from "../types";
 
@@ -8,7 +8,6 @@ interface UseAutoSyncProps {
 }
 
 export const useAutoSync = ({ debounceMs = 1000 }: UseAutoSyncProps = {}) => {
-    const queryClient = useQueryClient();
     const timeoutRef = useRef<number | null>(null);
     const pendingUpdatesRef = useRef(new Map<string, Task>());
 

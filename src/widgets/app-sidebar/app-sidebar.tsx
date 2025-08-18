@@ -25,9 +25,12 @@ import {
     SidebarRail,
 } from "@/shared/ui/sidebar";
 import { cn } from "@/shared/lib/utils";
-import type { ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 import { ModeToggle } from "@/shared/ui/mode-toggle";
 import { Link } from "@tanstack/react-router";
+import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
+import { useStore } from "jotai";
+import { useCurrentProjectsSync } from "@/entities/projects/hooks/use-current-project-sync";
 
 // This is sample data.
 const data = {
@@ -141,6 +144,15 @@ const Item = (props: {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const { isLoading, projects: projectsAtoms } = useProjectsSync();
+    const store = useStore();
+    const projects = useMemo(() => {
+        return projectsAtoms.map((projectAtom) => store.get(projectAtom));
+    }, [store.get, projectsAtoms]);
+    const { currentProjectId, changeCurrentProjectId } = useCurrentProjectsSync(
+        { defaultProjectId: projects[0]?.id },
+    );
+
     return (
         <Sidebar {...props} variant="floating">
             <SidebarHeader>
@@ -153,50 +165,50 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     ))}
                 </SidebarGroup>
                 <ModeToggle />
-                {data.navMain.map((item) => (
-                    <Collapsible
-                        key={item.title}
-                        title={item.title}
-                        defaultOpen={false}
-                        className="group/collapsible"
-                    >
-                        <SidebarGroup>
-                            <SidebarGroupLabel
-                                asChild
-                                className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm"
-                            >
-                                <CollapsibleTrigger>
-                                    {item.title}{" "}
-                                    <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                                </CollapsibleTrigger>
-                            </SidebarGroupLabel>
-                            <CollapsibleContent
-                                className={cn(
-                                    "text-popover-foreground outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-                                )}
-                            >
-                                <SidebarGroupContent>
-                                    <SidebarMenuSub>
-                                        {item.items.map((item) => (
-                                            <SidebarMenuSubItem
-                                                key={item.title}
+                <Collapsible
+                    title={"Projects"}
+                    defaultOpen={false}
+                    className="group/collapsible"
+                >
+                    <SidebarGroup>
+                        <SidebarGroupLabel
+                            asChild
+                            className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm"
+                        >
+                            <CollapsibleTrigger>
+                                {"Projects"}
+                                <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                            </CollapsibleTrigger>
+                        </SidebarGroupLabel>
+                        <CollapsibleContent
+                            className={cn(
+                                "text-popover-foreground outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+                            )}
+                        >
+                            <SidebarGroupContent>
+                                <SidebarMenuSub>
+                                    {projects.map((project) => (
+                                        <SidebarMenuSubItem key={project.id}>
+                                            <SidebarMenuSubButton
+                                                isActive={
+                                                    project.id ===
+                                                    currentProjectId
+                                                }
+                                                onClick={() => {
+                                                    changeCurrentProjectId(
+                                                        project.id,
+                                                    );
+                                                }}
                                             >
-                                                <SidebarMenuSubButton
-                                                    asChild
-                                                    isActive={item.isActive}
-                                                >
-                                                    <a href={item.url}>
-                                                        {item.title}
-                                                    </a>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        ))}
-                                    </SidebarMenuSub>
-                                </SidebarGroupContent>
-                            </CollapsibleContent>
-                        </SidebarGroup>
-                    </Collapsible>
-                ))}
+                                                {project.title}
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                    ))}
+                                </SidebarMenuSub>
+                            </SidebarGroupContent>
+                        </CollapsibleContent>
+                    </SidebarGroup>
+                </Collapsible>
             </SidebarContent>
             <SidebarRail />
         </Sidebar>

@@ -5,31 +5,42 @@ import { taskAtoms } from "../model/task-atom";
 import { api } from "@/shared/lib/api";
 import type { Task } from "../types";
 
-export const useTasksSync = () => {
+type Props = {
+    projectId?: string;
+};
+
+export const useTasksSync = (props: Props) => {
+    const { projectId } = props;
     const queryClient = useQueryClient();
     const [tasks, setTasks] = useAtom(taskAtoms);
     const store = useStore();
-    
+
     // Запрос для получения задач
     const tasksQuery = useQuery({
-        queryKey: ["tasks"],
-        queryFn: () => api.get<Task[]>("tasks").json(),
+        queryKey: ["tasks", projectId],
+        queryFn: () =>
+            api
+                .get<Task[]>("tasks", {
+                    searchParams: { projectId: projectId || "" },
+                })
+                .json(),
+        enabled: !!projectId,
     });
 
     // Мутации для CRUD операций
     const createTaskMutation = useMutation({
-        mutationFn: (task: Omit<Task, "id">) => 
+        mutationFn: (task: Omit<Task, "id">) =>
             api.post("tasks", { json: task }).json<Task>(),
         onSuccess: (newTask) => {
             // Обновляем локальный store
-            setTasks(prev => [...prev, atom(newTask)]);
+            setTasks((prev) => [...prev, atom(newTask)]);
             // Инвалидируем кэш
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
     });
 
     const updateTaskMutation = useMutation({
-        mutationFn: (task: Task) => 
+        mutationFn: (task: Task) =>
             api.put(`tasks/${task.id}`, { json: task }).json<Task>(),
         onSuccess: () => {
             // Не обновляем store здесь, так как данные уже обновлены через атомы
@@ -39,15 +50,14 @@ export const useTasksSync = () => {
     });
 
     const deleteTaskMutation = useMutation({
-        mutationFn: (taskId: string) => 
-            api.delete(`tasks/${taskId}`),
+        mutationFn: (taskId: string) => api.delete(`tasks/${taskId}`),
         onSuccess: (_, deletedTaskId) => {
             // Удаляем из локального store
-            setTasks(prev => 
-                prev.filter(taskAtom => {
+            setTasks((prev) =>
+                prev.filter((taskAtom) => {
                     const task = store.get(taskAtom);
                     return task.id !== deletedTaskId;
-                })
+                }),
             );
             // Инвалидируем кэш
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
@@ -57,7 +67,7 @@ export const useTasksSync = () => {
     // Синхронизация: загружаем данные в store при получении с сервера
     useEffect(() => {
         if (tasksQuery.data) {
-            setTasks(tasksQuery.data.map(task => atom(task)));
+            setTasks(tasksQuery.data.map((task) => atom(task)));
         }
     }, [tasksQuery.data, setTasks]);
 
@@ -66,18 +76,19 @@ export const useTasksSync = () => {
         tasks,
         isLoading: tasksQuery.isLoading,
         error: tasksQuery.error,
-        
+
         // Операции
         createTask: createTaskMutation.mutate,
         updateTask: updateTaskMutation.mutate,
         deleteTask: deleteTaskMutation.mutate,
-        
+
         // Состояния мутаций
         isCreating: createTaskMutation.isPending,
         isUpdating: updateTaskMutation.isPending,
         isDeleting: deleteTaskMutation.isPending,
-        
+
         // Рефеч данных
         refetch: tasksQuery.refetch,
     };
 };
+

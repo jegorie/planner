@@ -27,27 +27,58 @@ export const useTaskAutoSave = () => {
 
         // Проверяем изменения только если уже инициализированы
         if (isInitializedRef.current) {
-            currentTasks.forEach((currentTask, taskId) => {
-                const previousTask = previousTasksRef.current.get(taskId);
+            const previousTaskIds = new Set(previousTasksRef.current.keys());
+            const currentTaskIds = new Set(currentTasks.keys());
 
-                // Если задача изменилась, планируем синхронизацию
-                if (!previousTask || !isTaskEqual(previousTask, currentTask)) {
-                    console.log("📝 Task changed:", {
-                        taskId,
-                        previousTitle: previousTask?.title,
-                        currentTitle: currentTask.title,
-                        previousDesc: previousTask?.desc,
-                        currentDesc: currentTask.desc,
-                        isEqual: previousTask
-                            ? isTaskEqual(previousTask, currentTask)
-                            : false,
-                    });
-                    scheduleSync(currentTask);
-                }
-            });
+            // Проверяем, является ли это bulk replacement (заменой всех задач)
+            const commonTaskIds = new Set(
+                [...previousTaskIds].filter((id) => currentTaskIds.has(id)),
+            );
+            // Bulk replacement если нет общих задач И есть какие-то задачи
+            // (включая переходы к/от пустых проектов)
+            const isBulkReplacement =
+                commonTaskIds.size === 0 &&
+                (previousTaskIds.size > 0 || currentTaskIds.size > 0);
+
+            if (isBulkReplacement) {
+                console.log(
+                    "🔄 Bulk replacement detected, skipping auto-save:",
+                    {
+                        previousCount: previousTaskIds.size,
+                        currentCount: currentTaskIds.size,
+                        commonTasks: commonTaskIds.size,
+                    },
+                );
+            } else {
+                // Обычная проверка изменений задач
+                currentTasks.forEach((currentTask, taskId) => {
+                    const previousTask = previousTasksRef.current.get(taskId);
+
+                    // Если задача изменилась, планируем синхронизацию
+                    if (
+                        !previousTask ||
+                        !isTaskEqual(previousTask, currentTask)
+                    ) {
+                        console.log("📝 Task changed:", {
+                            taskId,
+                            previousTitle: previousTask?.title,
+                            currentTitle: currentTask.title,
+                            previousDesc: previousTask?.desc,
+                            currentDesc: currentTask.desc,
+                            isEqual: previousTask
+                                ? isTaskEqual(previousTask, currentTask)
+                                : false,
+                        });
+                        scheduleSync(currentTask);
+                    }
+                });
+            }
         } else if (currentTasks.size > 0) {
             // Первая загрузка - просто помечаем как инициализированные
-            console.log("🚀 Initial tasks loaded, skipping sync:", currentTasks.size);
+            console.log(
+                "🚀 Initial tasks loaded, skipping sync:",
+                currentTasks.size,
+            );
             isInitializedRef.current = true;
         }
 

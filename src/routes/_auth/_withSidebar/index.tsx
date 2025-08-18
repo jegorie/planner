@@ -1,7 +1,7 @@
 import { SidebarTrigger } from "@/shared/ui/sidebar";
 import { createFileRoute } from "@tanstack/react-router";
 import { NewTaskButton } from "@/entities/task/ui/new-task-button";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { TaskCard } from "@/widgets/task-card/task-card";
 import { EditTask } from "@/widgets/edit-task/edit-task";
 import type { Task } from "@/entities/task/types";
@@ -9,20 +9,37 @@ import { AnimatePresence } from "motion/react";
 import { TasksFilter } from "@/features/task-filter/ui/task-filter";
 import { useTasksSync } from "@/entities/task/hooks/use-tasks-sync";
 import { useTaskAutoSave } from "@/entities/task/hooks/use-task-auto-save";
+import { z } from "zod/v4";
+import { useCurrentProjectsSync } from "@/entities/projects/hooks/use-current-project-sync";
+import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
+import { useStore } from "jotai";
 
 export const Route = createFileRoute("/_auth/_withSidebar/")({
     component: App,
+    validateSearch: z.object({
+        projectId: z.string().optional(), // можно сузить до uuid() и т.п.
+    }),
 });
 
 function App() {
     const [isEditTaskOpen, setIsEditTaskOpen] = useState(false);
+    const { currentProjectId } = useCurrentProjectsSync();
+    const store = useStore();
+    const { projects } = useProjectsSync();
+    const currentProject = useMemo(() => {
+        return projects
+            .map((projectAtom) => store.get(projectAtom))
+            .find((project) => {
+                return project.id === currentProjectId;
+            });
+    }, [projects, currentProjectId, store.get]);
 
     const {
         tasks,
         isLoading,
         createTask,
         deleteTask: deleteTaskMutation,
-    } = useTasksSync();
+    } = useTasksSync({ projectId: currentProjectId });
 
     // Автоматическое сохранение изменений
     const { isPending: isSyncing } = useTaskAutoSave();
@@ -45,11 +62,13 @@ function App() {
             <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                 <div className="flex items-center gap-2 px-4">
                     <SidebarTrigger className="-ml-1" />
-                    <div className="text-xl font-bold">Task</div>
+                    <div className="text-xl font-bold">
+                        {currentProject?.title}
+                    </div>
                     {isSyncing && (
                         <div className="text-sm text-muted-foreground flex items-center gap-1">
                             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                            Синхронизация...
+                            Syncing...
                         </div>
                     )}
                 </div>
