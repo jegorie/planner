@@ -1,6 +1,6 @@
 import { labelAtoms } from "@/entities/label/atoms/all-labels-atom";
 import { Priority } from "@/entities/task/types";
-import { cn, getCapitalizedString } from "@/shared/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import { FadeCard } from "@/shared/ui/animations/fade-card";
 import { useAtom, useAtomValue, useStore } from "jotai";
 import { useState, useMemo, useCallback } from "react";
@@ -15,7 +15,7 @@ import {
 import { FilterSelect, type FilterOption } from "./filter-select";
 import { FilterDatePicker } from "./filter-date-picker";
 import { Input } from "@/shared/ui/input";
-import { EditIcon, ListIcon, PlusIcon } from "lucide-react";
+import { ListFilterPlusIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 
 export const TasksFilter = () => {
@@ -210,7 +210,7 @@ export const TasksFilter = () => {
                     className="rounded-full bg-primary-foreground/50 backdrop-blur"
                     onClick={() => setIsOpen(true)}
                 >
-                    <ListIcon />
+                    <ListFilterPlusIcon />
                 </Button>
                 <Button
                     size="icon"
