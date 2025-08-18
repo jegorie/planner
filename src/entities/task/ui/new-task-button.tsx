@@ -11,7 +11,7 @@ export const NewTaskButton: FC<Props> = (props) => {
 
     return (
         <Button
-            className="absolute bottom-8 right-8"
+            className="fixed bottom-8 right-8"
             variant="default"
             size="icon"
             onClick={onClick}

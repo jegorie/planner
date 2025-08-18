@@ -14,6 +14,9 @@ import {
 } from "../model/filter-atoms";
 import { FilterSelect, type FilterOption } from "./filter-select";
 import { FilterDatePicker } from "./filter-date-picker";
+import { Input } from "@/shared/ui/input";
+import { EditIcon, ListIcon, PlusIcon } from "lucide-react";
+import { Button } from "@/shared/ui/button";
 
 export const TasksFilter = () => {
     const store = useStore();
@@ -130,83 +133,93 @@ export const TasksFilter = () => {
     return (
         <div
             className={cn(
-                "sticky top-2 mx-auto border bg-primary-foreground/50 transition-all duration-300 z-10",
+                "sticky top-2 mx-auto duration-300 z-10 w-full flex gap-2 transition-all",
                 {
-                    ["bg-primary-foreground/50 backdrop-blur rounded-lg w-full max-w-4xl shadow-xl"]:
-                        isOpen,
+                    ["max-w-4xl"]: isOpen,
                 },
                 {
-                    ["bg-primary-foreground/10 backdrop-blur-xs px-3 py-1 rounded-2xl w-full max-w-sm shadow-xs hover:bg-primary-foreground"]:
-                        !isOpen,
+                    ["max-w-sm"]: !isOpen,
                 },
             )}
-            onClick={() => setIsOpen((prev) => !prev)}
         >
-            <FadeCard triggerKey={isOpen.toString()} duration={0.15}>
-                {isOpen ? (
-                    <div className="flex items-center py-4 px-4 flex-wrap gap-10">
-                        <div className="flex items-center flex-wrap gap-3 flex-7/12">
-                            {filterConfigs.slice(0, 2).map((config, index) => (
-                                <FilterSelect
-                                    key={index}
-                                    label={config.label}
-                                    value={config.value}
-                                    onValueChange={config.onValueChange}
-                                    options={config.options}
-                                    placeholder={config.placeholder}
-                                />
-                            ))}
-                            <FilterDatePicker
-                                label="Date"
-                                value={selectedDate}
-                                onValueChange={setSelectedDate}
-                                placeholder="All dates"
-                            />
-                        </div>
-                        <div className="flex items-center flex-wrap gap-3 flex-4/12">
-                            {filterConfigs.slice(2).map((config, index) => (
-                                <FilterSelect
-                                    key={index}
-                                    label={config.label}
-                                    value={config.value}
-                                    onValueChange={config.onValueChange}
-                                    options={config.options}
-                                    placeholder={config.placeholder}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                ) : (
-                    <div className="flex gap-4 justify-center">
-                        <div>
-                            <span className="text-sm text-primary/50">
-                                Sorting:
-                            </span>{" "}
-                            <span className="font-medium">
-                                {coundSortingEl}
-                            </span>
-                        </div>
-                        <div>
-                            <span className="text-sm text-primary/50">
-                                Sort by:
-                            </span>{" "}
-                            <span className="font-medium">
-                                {getCapitalizedString(sortBy)}
-                            </span>
-                        </div>
-                        {sortBy !== "custom" && (
-                            <div>
-                                <span className="text-sm text-primary/50">
-                                    Order:
-                                </span>{" "}
-                                <span className="font-medium">
-                                    {getCapitalizedString(sortOrder)}
-                                </span>
-                            </div>
-                        )}
-                    </div>
+            <div
+                className={cn(
+                    "border bg-primary-foreground/50 transition-all duration-300 overflow-hidden",
+                    {
+                        ["bg-primary-foreground/50 backdrop-blur rounded-lg w-full max-w-4xl shadow-xl"]:
+                            isOpen,
+                    },
+                    {
+                        ["bg-primary-foreground/10 backdrop-blur-xs rounded-4xl w-full max-w-sm shadow-xs hover:bg-primary-foreground"]:
+                            !isOpen,
+                    },
                 )}
-            </FadeCard>
+                onClick={() => isOpen && setIsOpen(false)}
+            >
+                <FadeCard triggerKey={isOpen.toString()} duration={0.3}>
+                    {isOpen ? (
+                        <div className="flex items-center py-4 px-4 flex-wrap gap-10">
+                            <div className="flex items-center flex-wrap gap-3 flex-7/12">
+                                {filterConfigs.slice(0, 2).map((config) => (
+                                    <FilterSelect
+                                        key={config.label}
+                                        label={config.label}
+                                        value={config.value}
+                                        onValueChange={config.onValueChange}
+                                        options={config.options}
+                                        placeholder={config.placeholder}
+                                    />
+                                ))}
+                                <FilterDatePicker
+                                    label="Date"
+                                    value={selectedDate}
+                                    onValueChange={setSelectedDate}
+                                    placeholder="All dates"
+                                />
+                            </div>
+                            <div className="flex items-center flex-wrap gap-3 flex-4/12">
+                                {filterConfigs.slice(2).map((config) => (
+                                    <FilterSelect
+                                        key={config.label}
+                                        label={config.label}
+                                        value={config.value}
+                                        onValueChange={config.onValueChange}
+                                        options={config.options}
+                                        placeholder={config.placeholder}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <Input
+                            className="rounded-4xl shadow-none overflow-hidden border-none"
+                            placeholder="Task title"
+                        />
+                    )}
+                </FadeCard>
+            </div>
+            <div
+                className={cn(
+                    "flex gap-2 w-[80px] transition-all duration-300",
+                    isOpen && "opacity-0 w-0",
+                )}
+            >
+                <Button
+                    size="icon"
+                    variant="outline"
+                    className="rounded-full bg-primary-foreground/50 backdrop-blur"
+                    onClick={() => setIsOpen(true)}
+                >
+                    <ListIcon />
+                </Button>
+                <Button
+                    size="icon"
+                    variant="outline"
+                    className="rounded-full bg-primary-foreground/50 backdrop-blur"
+                >
+                    <PlusIcon />
+                </Button>
+            </div>
         </div>
     );
 };

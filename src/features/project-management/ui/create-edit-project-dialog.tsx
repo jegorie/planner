@@ -4,9 +4,9 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/shared/ui/dialog";
-import { ProjectForm } from "./project-form";
-import { useProjectsSync } from "../hooks/use-projects-sync";
-import type { Project } from "../types";
+import { ProjectForm } from "@/entities/projects/ui/project-form";
+import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
+import type { Project } from "@/entities/projects/types";
 import { toast } from "sonner";
 
 type Props = {

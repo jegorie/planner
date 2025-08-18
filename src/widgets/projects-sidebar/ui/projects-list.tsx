@@ -8,9 +8,9 @@ import {
     SidebarMenu,
 } from "@/shared/ui/sidebar";
 import { Button } from "@/shared/ui/button";
-import { useProjectsSync } from "../hooks/use-projects-sync";
-import { useCurrentProjectsSync } from "../hooks/use-current-project-sync";
-import { ProjectDialog } from "./project-dialog";
+import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
+import { useCurrentProjectsSync } from "@/entities/projects/hooks/use-current-project-sync";
+import { ProjectDialog } from "@/features/project-management/ui/create-edit-project-dialog";
 import { ProjectItem } from "./project-item";
 import { Input } from "@/shared/ui/input";
 

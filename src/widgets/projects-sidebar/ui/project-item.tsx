@@ -20,10 +20,10 @@ import {
 } from "@/shared/ui/alert-dialog";
 import { SidebarMenuButton, SidebarMenuItem } from "@/shared/ui/sidebar";
 import { toast } from "sonner";
-import { useProjectsSync } from "../hooks/use-projects-sync";
-import { ProjectDialog } from "./project-dialog";
+import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
+import { ProjectDialog } from "@/features/project-management/ui/create-edit-project-dialog";
 import type { PrimitiveAtom } from "jotai";
-import type { Project } from "../types";
+import type { Project } from "@/entities/projects/types";
 
 type Props = {
     projectAtom: PrimitiveAtom<Project>;
@@ -62,7 +62,7 @@ export const ProjectItem: React.FC<Props> = (props) => {
                         {project.isInbox && (
                             <InboxIcon className="text-primary/50" />
                         )}
-                        {project.title}
+                        <span className="truncate">{project.title}</span>
                     </SidebarMenuButton>
                     {!project.isInbox && (
                         <DropdownMenu>

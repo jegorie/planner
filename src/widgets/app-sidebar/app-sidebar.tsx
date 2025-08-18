@@ -12,7 +12,7 @@ import { cn } from "@/shared/lib/utils";
 import { type ReactNode } from "react";
 import { ModeToggle } from "@/shared/ui/mode-toggle";
 import { Link } from "@tanstack/react-router";
-import { ProjectsList } from "@/entities/projects/ui";
+import { ProjectsList } from "@/widgets/projects-sidebar/ui/projects-list";
 
 // This is sample data.
 const data = {
