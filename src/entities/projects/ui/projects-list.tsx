@@ -24,7 +24,7 @@ export const ProjectsList: React.FC = () => {
 
     const { currentProjectId, changeCurrentProjectId } = useCurrentProjectsSync(
         {
-            defaultProjectId: projects[0]?.id,
+            defaultProjectId: projects.find((item) => item.isInbox)?.id,
         },
     );
 

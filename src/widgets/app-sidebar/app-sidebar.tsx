@@ -64,7 +64,7 @@ const data = {
 
 type TAvailableColors = "blue" | "green" | "orange" | "purple";
 
-const itemsArr: {
+const hotMenuItems: {
     to: string;
     title: string;
     color: TAvailableColors;
@@ -133,7 +133,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent className="gap-0">
                 <SidebarGroup className="grid grid-cols-2 grid-rows-2 w-full gap-2">
-                    {itemsArr.map((item) => (
+                    {hotMenuItems.map((item) => (
                         <Item {...item} key={item.to} />
                     ))}
                 </SidebarGroup>
@@ -144,4 +144,3 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </Sidebar>
     );
 }
-

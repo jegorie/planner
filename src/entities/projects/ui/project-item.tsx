@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAtom } from "jotai";
-import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2, InboxIcon } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import {
     DropdownMenu,
@@ -52,13 +52,16 @@ export const ProjectItem: React.FC<Props> = (props) => {
 
     return (
         <>
-            <SidebarMenuItem>
-                <div className="flex items-center justify-between">
+            <SidebarMenuItem className="group/project">
+                <div className="flex items-center justify-between gap-2">
                     <SidebarMenuButton
                         isActive={isActive}
                         onClick={() => onSelect(project.id)}
-                        className="flex-1"
+                        className="flex-1 h-9"
                     >
+                        {project.isInbox && (
+                            <InboxIcon className="text-primary/50" />
+                        )}
                         {project.title}
                     </SidebarMenuButton>
                     {!project.isInbox && (
@@ -66,7 +69,7 @@ export const ProjectItem: React.FC<Props> = (props) => {
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="ghost"
-                                    className="group-hover/project:opacity-100 transition-opacity"
+                                    className="opacity-0 group-hover/project:opacity-100 transition-opacity"
                                 >
                                     <MoreHorizontal className="h-3 w-3" />
                                 </Button>
@@ -102,29 +105,31 @@ export const ProjectItem: React.FC<Props> = (props) => {
                         open={isDeleteDialogOpen}
                         onOpenChange={setIsDeleteDialogOpen}
                     >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Delete project?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Вы уверены, что хотите удалить проект "
-                            {project.title}"? Это действие нельзя отменить.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Отмена</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={handleDelete}
-                            disabled={isDeleting}
-                            className="bg-destructive hover:bg-destructive/90"
-                        >
-                            Удалить
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                    Delete project?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Вы уверены, что хотите удалить проект "
+                                    {project.title}"? Это действие нельзя
+                                    отменить.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Отмена</AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={handleDelete}
+                                    disabled={isDeleting}
+                                    className="bg-destructive hover:bg-destructive/90"
+                                >
+                                    Удалить
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
                     </AlertDialog>
                 </>
             )}
         </>
     );
 };
-
