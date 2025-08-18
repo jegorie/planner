@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { api } from "@/shared/lib/api";
 
 type Props = {
-    onSuccess: (props: { accessToken: string }) => void;
+    onSuccess: () => void;
 };
 
 export const SigninForm: React.FC<Props> = (props) => {

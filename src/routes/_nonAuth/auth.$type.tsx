@@ -8,7 +8,6 @@ import { SignupForm } from "@/widgets/auth/ui/signup-form";
 import { FadeCard } from "@/shared/ui/animations/fade-card";
 import { z } from "zod/v4";
 import { useSetAtom } from "jotai";
-import { accessTokenAtom } from "@/entities/auth/atoms/token-atom";
 import { isAuthFailedAtom } from "@/entities/auth/atoms/is-auth-failed-atom";
 
 // Inline SVG for Google logo
@@ -45,11 +44,9 @@ export const AuthCard: React.FC = () => {
     const search = Route.useSearch();
     const { type } = useParams({ from: "/_nonAuth/auth/$type" });
     const navigate = Route.useNavigate();
-    const setToken = useSetAtom(accessTokenAtom);
     const setIsAuthFailed = useSetAtom(isAuthFailedAtom);
 
-    const goToMainPage = (props: { accessToken: string }) => {
-        setToken(props.accessToken);
+    const goToMainPage = () => {
         setIsAuthFailed(false);
         navigate({ to: search.redirect || "/" });
     };
