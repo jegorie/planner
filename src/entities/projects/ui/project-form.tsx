@@ -7,7 +7,7 @@ import { z } from "zod";
 import type { Project } from "../types";
 
 const ProjectSchema = z.object({
-    title: z.string().min(1, "Название проекта обязательно"),
+    title: z.string().min(1, "Project name is required"),
 });
 
 type ProjectFormData = z.infer<typeof ProjectSchema>;
@@ -21,7 +21,7 @@ type Props = {
 
 export const ProjectForm: React.FC<Props> = (props) => {
     const { project, onSubmit, onCancel, isLoading = false } = props;
-    
+
     const {
         register,
         handleSubmit,
@@ -36,35 +36,28 @@ export const ProjectForm: React.FC<Props> = (props) => {
     });
 
     return (
-        <form
-            className="grid gap-4"
-            onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-1">
-                <label htmlFor="title">Название проекта</label>
-                <Input 
-                    id="title" 
-                    type="text" 
-                    placeholder="Введите название проекта..."
-                    {...register("title")} 
+                <label htmlFor="title">Project Name</label>
+                <Input
+                    id="title"
+                    type="text"
+                    placeholder="Enter project name..."
+                    {...register("title")}
                 />
                 <HelperText title={errors.title?.message} error />
             </div>
-            
-            <div className="flex gap-2 justify-end mt-4">
-                <Button 
-                    type="button" 
-                    variant="outline" 
+            <div className="flex gap-2 justify-end">
+                <Button
+                    type="button"
+                    variant="outline"
                     onClick={onCancel}
                     disabled={isLoading}
                 >
-                    Отмена
+                    Cancel
                 </Button>
-                <Button 
-                    type="submit" 
-                    disabled={isLoading}
-                >
-                    {project ? "Сохранить" : "Создать"}
+                <Button type="submit" disabled={isLoading}>
+                    {project ? "Save" : "Create"}
                 </Button>
             </div>
         </form>

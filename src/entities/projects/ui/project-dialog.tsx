@@ -26,22 +26,22 @@ export const ProjectDialog: React.FC<Props> = (props) => {
                 { ...project, title: data.title },
                 {
                     onSuccess: () => {
-                        toast.success("Проект обновлен");
+                        toast.success("Project updated");
                         onClose();
                     },
                     onError: () => {
-                        toast.error("Ошибка при обновлении проекта");
+                        toast.error("Error updating project");
                     },
                 },
             );
         } else {
             createProject(data, {
                 onSuccess: () => {
-                    toast.success("Проект создан");
+                    toast.success("Project created");
                     onClose();
                 },
                 onError: () => {
-                    toast.error("Ошибка при создании проекта");
+                    toast.error("Error creating project");
                 },
             });
         }
@@ -52,7 +52,7 @@ export const ProjectDialog: React.FC<Props> = (props) => {
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>
-                        {project ? "Редактировать проект" : "Создать проект"}
+                        {project ? "Edit Project" : "Create Project"}
                     </DialogTitle>
                 </DialogHeader>
                 <ProjectForm
