@@ -10,6 +10,12 @@ import { useTasksSync } from "@/entities/task/hooks/use-tasks-sync";
 import { useTaskAutoSave } from "@/entities/task/hooks/use-task-auto-save";
 import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
 import { useStore } from "jotai";
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbList,
+    BreadcrumbPage,
+} from "@/shared/ui/breadcrumb";
 
 export const Route = createFileRoute("/_auth/_withSidebar/$projectId/")({
     component: ProjectRoute,
@@ -69,9 +75,15 @@ function ProjectRoute() {
             <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                 <div className="flex items-center gap-2 px-4">
                     <SidebarTrigger className="-ml-1" />
-                    <div className="text-xl font-bold">
-                        {currentProject.title}
-                    </div>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>
+                                    {currentProject.title}
+                                </BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
                     {isSyncing && (
                         <div className="text-sm text-muted-foreground flex items-center gap-1">
                             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
@@ -100,4 +112,3 @@ function ProjectRoute() {
         </div>
     );
 }
-

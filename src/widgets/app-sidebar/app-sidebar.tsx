@@ -28,7 +28,7 @@ const hotMenuItems: {
 }[] = [
     {
         getTo: (projectId) => `/${projectId}`,
-        title: "Inbox",
+        title: "Tasks",
         color: "blue",
         icon: <InboxIcon className="size-4" />,
     },
@@ -82,17 +82,16 @@ const Item = (props: {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    const params = useParams({ strict: false });
+    const { projectId: currentProjectId } = useParams({ strict: false });
     const store = useStore();
     const { projects } = useProjectsSync();
-    
-    const currentProjectId = params.projectId;
+
     const inboxProjectId = useMemo(() => {
         return projects
             .map((projectAtom) => store.get(projectAtom))
             .find((project) => project.isInbox)?.id;
     }, [projects, store]);
-    
+
     const projectId = currentProjectId || inboxProjectId;
 
     return (
@@ -103,10 +102,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarContent className="gap-0">
                 <SidebarGroup className="grid grid-cols-2 grid-rows-2 w-full gap-2">
                     {hotMenuItems.map((item) => (
-                        <Item 
-                            {...item} 
+                        <Item
+                            {...item}
                             key={item.title}
-                            to={projectId ? item.getTo(projectId) : "/"} 
+                            to={projectId ? item.getTo(projectId) : "/"}
                         />
                     ))}
                 </SidebarGroup>
