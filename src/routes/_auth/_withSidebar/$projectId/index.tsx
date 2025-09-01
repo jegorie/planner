@@ -11,7 +11,7 @@ import { useTaskAutoSave } from "@/entities/task/hooks/use-task-auto-save";
 import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
 import { useStore } from "jotai";
 
-export const Route = createFileRoute("/_auth/_withSidebar/$projectId")({
+export const Route = createFileRoute("/_auth/_withSidebar/$projectId/")({
     component: ProjectRoute,
 });
 

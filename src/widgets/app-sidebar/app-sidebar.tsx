@@ -9,87 +9,43 @@ import {
     SidebarRail,
 } from "@/shared/ui/sidebar";
 import { cn } from "@/shared/lib/utils";
-import { type ReactNode } from "react";
+import { type ReactNode, useMemo } from "react";
 import { ModeToggle } from "@/shared/ui/mode-toggle";
-import { Link } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { ProjectsList } from "@/widgets/projects-sidebar/ui/projects-list";
+import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
+import { useStore } from "jotai";
 
-// This is sample data.
-const data = {
-    apps: ["planner"],
-    navMain: [
-        {
-            title: "Home project",
-            url: "#",
-            items: [
-                {
-                    title: "Introduction",
-                    url: "#",
-                    isActive: true,
-                },
-                {
-                    title: "Project Structure",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Team project",
-            url: "#",
-            items: [
-                {
-                    title: "Routing",
-                    url: "#",
-                },
-                {
-                    title: "Data Fetching",
-                    url: "#",
-                },
-                {
-                    title: "Rendering",
-                    url: "#",
-                },
-                {
-                    title: "Caching",
-                    url: "#",
-                },
-                {
-                    title: "Styling",
-                    url: "#",
-                },
-            ],
-        },
-    ],
-};
+const apps = ["planner"];
 
 type TAvailableColors = "blue" | "green" | "orange" | "purple";
 
 const hotMenuItems: {
-    to: string;
+    getTo: (projectId: string) => string;
     title: string;
     color: TAvailableColors;
     icon: ReactNode;
 }[] = [
     {
-        to: "/",
+        getTo: (projectId) => `/${projectId}`,
         title: "Inbox",
         color: "blue",
         icon: <InboxIcon className="size-4" />,
     },
     {
-        to: "/today",
+        getTo: (projectId) => `/${projectId}/today`,
         title: "Today",
         color: "green",
         icon: <StarIcon className="size-4" />,
     },
     {
-        to: "/scheduled",
+        getTo: (projectId) => `/${projectId}/scheduled`,
         title: "Scheduled",
         color: "purple",
         icon: <CalendarDaysIcon className="size-4" />,
     },
     {
-        to: "/labels",
+        getTo: (projectId) => `/${projectId}/labels`,
         title: "Labels",
         color: "orange",
         icon: <TagIcon className="size-4" />,
@@ -126,15 +82,32 @@ const Item = (props: {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const params = useParams({ strict: false });
+    const store = useStore();
+    const { projects } = useProjectsSync();
+    
+    const currentProjectId = params.projectId;
+    const inboxProjectId = useMemo(() => {
+        return projects
+            .map((projectAtom) => store.get(projectAtom))
+            .find((project) => project.isInbox)?.id;
+    }, [projects, store]);
+    
+    const projectId = currentProjectId || inboxProjectId;
+
     return (
         <Sidebar {...props} variant="floating">
             <SidebarHeader>
-                <AppSwitcher apps={data.apps} />
+                <AppSwitcher apps={apps} />
             </SidebarHeader>
             <SidebarContent className="gap-0">
                 <SidebarGroup className="grid grid-cols-2 grid-rows-2 w-full gap-2">
                     {hotMenuItems.map((item) => (
-                        <Item {...item} key={item.to} />
+                        <Item 
+                            {...item} 
+                            key={item.title}
+                            to={projectId ? item.getTo(projectId) : "/"} 
+                        />
                     ))}
                 </SidebarGroup>
                 <ModeToggle />

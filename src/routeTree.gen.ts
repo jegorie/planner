@@ -15,7 +15,7 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthWithSidebarImport } from './routes/_auth/_withSidebar'
 import { Route as AuthWithSidebarIndexImport } from './routes/_auth/_withSidebar/index'
 import { Route as NonAuthAuthTypeImport } from './routes/_nonAuth/auth.$type'
-import { Route as AuthWithSidebarProjectIdImport } from './routes/_auth/_withSidebar/$projectId'
+import { Route as AuthWithSidebarProjectIdIndexImport } from './routes/_auth/_withSidebar/$projectId/index'
 import { Route as AuthWithSidebarProjectIdLabelsImport } from './routes/_auth/_withSidebar/$projectId/labels'
 
 // Create/Update Routes
@@ -42,17 +42,18 @@ const NonAuthAuthTypeRoute = NonAuthAuthTypeImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthWithSidebarProjectIdRoute = AuthWithSidebarProjectIdImport.update({
-  id: '/$projectId',
-  path: '/$projectId',
-  getParentRoute: () => AuthWithSidebarRoute,
-} as any)
+const AuthWithSidebarProjectIdIndexRoute =
+  AuthWithSidebarProjectIdIndexImport.update({
+    id: '/$projectId/',
+    path: '/$projectId/',
+    getParentRoute: () => AuthWithSidebarRoute,
+  } as any)
 
 const AuthWithSidebarProjectIdLabelsRoute =
   AuthWithSidebarProjectIdLabelsImport.update({
-    id: '/labels',
-    path: '/labels',
-    getParentRoute: () => AuthWithSidebarProjectIdRoute,
+    id: '/$projectId/labels',
+    path: '/$projectId/labels',
+    getParentRoute: () => AuthWithSidebarRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -73,13 +74,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthWithSidebarImport
       parentRoute: typeof AuthImport
     }
-    '/_auth/_withSidebar/$projectId': {
-      id: '/_auth/_withSidebar/$projectId'
-      path: '/$projectId'
-      fullPath: '/$projectId'
-      preLoaderRoute: typeof AuthWithSidebarProjectIdImport
-      parentRoute: typeof AuthWithSidebarImport
-    }
     '/_nonAuth/auth/$type': {
       id: '/_nonAuth/auth/$type'
       path: '/auth/$type'
@@ -96,38 +90,33 @@ declare module '@tanstack/react-router' {
     }
     '/_auth/_withSidebar/$projectId/labels': {
       id: '/_auth/_withSidebar/$projectId/labels'
-      path: '/labels'
+      path: '/$projectId/labels'
       fullPath: '/$projectId/labels'
       preLoaderRoute: typeof AuthWithSidebarProjectIdLabelsImport
-      parentRoute: typeof AuthWithSidebarProjectIdImport
+      parentRoute: typeof AuthWithSidebarImport
+    }
+    '/_auth/_withSidebar/$projectId/': {
+      id: '/_auth/_withSidebar/$projectId/'
+      path: '/$projectId'
+      fullPath: '/$projectId'
+      preLoaderRoute: typeof AuthWithSidebarProjectIdIndexImport
+      parentRoute: typeof AuthWithSidebarImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AuthWithSidebarProjectIdRouteChildren {
-  AuthWithSidebarProjectIdLabelsRoute: typeof AuthWithSidebarProjectIdLabelsRoute
-}
-
-const AuthWithSidebarProjectIdRouteChildren: AuthWithSidebarProjectIdRouteChildren =
-  {
-    AuthWithSidebarProjectIdLabelsRoute: AuthWithSidebarProjectIdLabelsRoute,
-  }
-
-const AuthWithSidebarProjectIdRouteWithChildren =
-  AuthWithSidebarProjectIdRoute._addFileChildren(
-    AuthWithSidebarProjectIdRouteChildren,
-  )
-
 interface AuthWithSidebarRouteChildren {
-  AuthWithSidebarProjectIdRoute: typeof AuthWithSidebarProjectIdRouteWithChildren
   AuthWithSidebarIndexRoute: typeof AuthWithSidebarIndexRoute
+  AuthWithSidebarProjectIdLabelsRoute: typeof AuthWithSidebarProjectIdLabelsRoute
+  AuthWithSidebarProjectIdIndexRoute: typeof AuthWithSidebarProjectIdIndexRoute
 }
 
 const AuthWithSidebarRouteChildren: AuthWithSidebarRouteChildren = {
-  AuthWithSidebarProjectIdRoute: AuthWithSidebarProjectIdRouteWithChildren,
   AuthWithSidebarIndexRoute: AuthWithSidebarIndexRoute,
+  AuthWithSidebarProjectIdLabelsRoute: AuthWithSidebarProjectIdLabelsRoute,
+  AuthWithSidebarProjectIdIndexRoute: AuthWithSidebarProjectIdIndexRoute,
 }
 
 const AuthWithSidebarRouteWithChildren = AuthWithSidebarRoute._addFileChildren(
@@ -146,43 +135,43 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 export interface FileRoutesByFullPath {
   '': typeof AuthWithSidebarRouteWithChildren
-  '/$projectId': typeof AuthWithSidebarProjectIdRouteWithChildren
   '/auth/$type': typeof NonAuthAuthTypeRoute
   '/': typeof AuthWithSidebarIndexRoute
   '/$projectId/labels': typeof AuthWithSidebarProjectIdLabelsRoute
+  '/$projectId': typeof AuthWithSidebarProjectIdIndexRoute
 }
 
 export interface FileRoutesByTo {
   '': typeof AuthRouteWithChildren
-  '/$projectId': typeof AuthWithSidebarProjectIdRouteWithChildren
   '/auth/$type': typeof NonAuthAuthTypeRoute
   '/': typeof AuthWithSidebarIndexRoute
   '/$projectId/labels': typeof AuthWithSidebarProjectIdLabelsRoute
+  '/$projectId': typeof AuthWithSidebarProjectIdIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_auth': typeof AuthRouteWithChildren
   '/_auth/_withSidebar': typeof AuthWithSidebarRouteWithChildren
-  '/_auth/_withSidebar/$projectId': typeof AuthWithSidebarProjectIdRouteWithChildren
   '/_nonAuth/auth/$type': typeof NonAuthAuthTypeRoute
   '/_auth/_withSidebar/': typeof AuthWithSidebarIndexRoute
   '/_auth/_withSidebar/$projectId/labels': typeof AuthWithSidebarProjectIdLabelsRoute
+  '/_auth/_withSidebar/$projectId/': typeof AuthWithSidebarProjectIdIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/$projectId' | '/auth/$type' | '/' | '/$projectId/labels'
+  fullPaths: '' | '/auth/$type' | '/' | '/$projectId/labels' | '/$projectId'
   fileRoutesByTo: FileRoutesByTo
-  to: '' | '/$projectId' | '/auth/$type' | '/' | '/$projectId/labels'
+  to: '' | '/auth/$type' | '/' | '/$projectId/labels' | '/$projectId'
   id:
     | '__root__'
     | '/_auth'
     | '/_auth/_withSidebar'
-    | '/_auth/_withSidebar/$projectId'
     | '/_nonAuth/auth/$type'
     | '/_auth/_withSidebar/'
     | '/_auth/_withSidebar/$projectId/labels'
+    | '/_auth/_withSidebar/$projectId/'
   fileRoutesById: FileRoutesById
 }
 
@@ -220,15 +209,9 @@ export const routeTree = rootRoute
       "filePath": "_auth/_withSidebar.tsx",
       "parent": "/_auth",
       "children": [
-        "/_auth/_withSidebar/$projectId",
-        "/_auth/_withSidebar/"
-      ]
-    },
-    "/_auth/_withSidebar/$projectId": {
-      "filePath": "_auth/_withSidebar/$projectId.tsx",
-      "parent": "/_auth/_withSidebar",
-      "children": [
-        "/_auth/_withSidebar/$projectId/labels"
+        "/_auth/_withSidebar/",
+        "/_auth/_withSidebar/$projectId/labels",
+        "/_auth/_withSidebar/$projectId/"
       ]
     },
     "/_nonAuth/auth/$type": {
@@ -240,7 +223,11 @@ export const routeTree = rootRoute
     },
     "/_auth/_withSidebar/$projectId/labels": {
       "filePath": "_auth/_withSidebar/$projectId/labels.tsx",
-      "parent": "/_auth/_withSidebar/$projectId"
+      "parent": "/_auth/_withSidebar"
+    },
+    "/_auth/_withSidebar/$projectId/": {
+      "filePath": "_auth/_withSidebar/$projectId/index.tsx",
+      "parent": "/_auth/_withSidebar"
     }
   }
 }
