@@ -1,13 +1,8 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { Route as TasksRoute } from "@/routes/_auth/_withSidebar/index";
 
-type Props = {
-    defaultProjectId?: string;
-};
-
-export const useCurrentProjectsSync = (props?: Props) => {
-    const { defaultProjectId } = props || {};
+export const useCurrentProjectsSync = () => {
     const { projectId: currentProjectId } = useSearch({ from: TasksRoute.id });
     const navigate = useNavigate();
 
@@ -24,12 +19,6 @@ export const useCurrentProjectsSync = (props?: Props) => {
         },
         [navigate],
     );
-
-    useEffect(() => {
-        if (!currentProjectId && defaultProjectId) {
-            changeCurrentProjectId(defaultProjectId);
-        }
-    }, [currentProjectId, defaultProjectId, changeCurrentProjectId]);
 
     return {
         currentProjectId,

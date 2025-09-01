@@ -1,6 +1,5 @@
 import { SidebarTrigger } from "@/shared/ui/sidebar";
 import { createFileRoute } from "@tanstack/react-router";
-import { NewTaskButton } from "@/entities/task/ui/new-task-button";
 import { useMemo, useState } from "react";
 import { TaskCard } from "@/widgets/task-card/task-card";
 import { EditTask } from "@/widgets/edit-task/edit-task";
@@ -74,8 +73,7 @@ function App() {
                 </div>
             </header>
             <main className="flex flex-col items-center gap-5 px-5 relative flex-auto pb-32 h-[2000px]">
-                <TasksFilter />
-                <NewTaskButton onClick={() => setIsEditTaskOpen(true)} />
+                <TasksFilter onNewTaskClick={() => setIsEditTaskOpen(true)} />
                 {tasks.map((atom) => (
                     <AnimatePresence key={atom.toString()}>
                         <TaskCard

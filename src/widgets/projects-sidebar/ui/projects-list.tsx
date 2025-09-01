@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useStore } from "jotai";
 import { Plus, X } from "lucide-react";
 import {
@@ -22,11 +22,8 @@ export const ProjectsList: React.FC = () => {
         return projectsAtoms.map((projectAtom) => store.get(projectAtom));
     }, [store.get, projectsAtoms]);
 
-    const { currentProjectId, changeCurrentProjectId } = useCurrentProjectsSync(
-        {
-            defaultProjectId: projects.find((item) => item.isInbox)?.id,
-        },
-    );
+    const { currentProjectId, changeCurrentProjectId } =
+        useCurrentProjectsSync();
 
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
@@ -35,6 +32,14 @@ export const ProjectsList: React.FC = () => {
               project.title.toLowerCase().includes(search.toLowerCase()),
           )
         : projects;
+
+    useEffect(() => {
+        const inboxId = projects.find((item) => item.isInbox)?.id;
+
+        if (!currentProjectId && inboxId) {
+            changeCurrentProjectId(inboxId);
+        }
+    }, [currentProjectId, projects, changeCurrentProjectId]);
 
     return (
         <>

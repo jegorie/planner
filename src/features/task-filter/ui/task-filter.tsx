@@ -18,7 +18,12 @@ import { Input } from "@/shared/ui/input";
 import { ListFilterPlusIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 
-export const TasksFilter = () => {
+type Props = {
+    onNewTaskClick: () => void;
+};
+
+export const TasksFilter: React.FC<Props> = (props) => {
+    const { onNewTaskClick } = props;
     const store = useStore();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -50,7 +55,7 @@ export const TasksFilter = () => {
         [setSelectedLabels],
     );
 
-    const coundSortingEl =
+    const countSortingEl =
         +(selectedLabel !== "all") +
         +(selectedPriority !== "all") +
         +(selectedDate !== "all");
@@ -133,7 +138,7 @@ export const TasksFilter = () => {
     return (
         <div
             className={cn(
-                "sticky top-2 mx-auto duration-300 z-10 w-full flex gap-2 transition-all",
+                "sticky top-2 mx-auto duration-300 z-10 w-full flex transition-all",
                 {
                     ["max-w-4xl"]: isOpen,
                 },
@@ -193,7 +198,7 @@ export const TasksFilter = () => {
                     ) : (
                         <Input
                             className="rounded-4xl shadow-none overflow-hidden border-none"
-                            placeholder="Task title"
+                            placeholder="Search by title"
                         />
                     )}
                 </FadeCard>
@@ -201,7 +206,7 @@ export const TasksFilter = () => {
             <div
                 className={cn(
                     "flex gap-2 w-[80px] transition-all duration-300",
-                    isOpen && "opacity-0 w-0",
+                    isOpen ? "opacity-0 w-0 ml-0" : "ml-2",
                 )}
             >
                 <Button
@@ -216,6 +221,7 @@ export const TasksFilter = () => {
                     size="icon"
                     variant="outline"
                     className="rounded-full bg-primary-foreground/50 backdrop-blur"
+                    onClick={onNewTaskClick}
                 >
                     <PlusIcon />
                 </Button>
