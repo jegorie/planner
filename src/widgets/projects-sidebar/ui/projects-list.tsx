@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useStore } from "jotai";
 import { Plus, X } from "lucide-react";
 import {
@@ -9,37 +9,34 @@ import {
 } from "@/shared/ui/sidebar";
 import { Button } from "@/shared/ui/button";
 import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
-import { useCurrentProjectsSync } from "@/entities/projects/hooks/use-current-project-sync";
 import { ProjectDialog } from "@/features/project-management/ui/create-edit-project-dialog";
 import { ProjectItem } from "./project-item";
 import { Input } from "@/shared/ui/input";
+import { useNavigate, useParams } from "@tanstack/react-router";
 
 export const ProjectsList: React.FC = () => {
     const [search, setSearch] = useState("");
     const { projects: projectsAtoms } = useProjectsSync();
     const store = useStore();
+    const navigate = useNavigate();
+    const params = useParams({ strict: false });
+    const currentProjectId = params.projectId;
+    
     const projects = useMemo(() => {
         return projectsAtoms.map((projectAtom) => store.get(projectAtom));
     }, [store.get, projectsAtoms]);
 
-    const { currentProjectId, changeCurrentProjectId } =
-        useCurrentProjectsSync();
-
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+    
+    const handleSelectProject = (projectId: string) => {
+        navigate({ to: "/$projectId", params: { projectId } });
+    };
 
     const filteredProjects = search.length
         ? projects.filter((project) =>
               project.title.toLowerCase().includes(search.toLowerCase()),
           )
         : projects;
-
-    useEffect(() => {
-        const inboxId = projects.find((item) => item.isInbox)?.id;
-
-        if (!currentProjectId && inboxId) {
-            changeCurrentProjectId(inboxId);
-        }
-    }, [currentProjectId, projects, changeCurrentProjectId]);
 
     return (
         <>
@@ -94,7 +91,7 @@ export const ProjectsList: React.FC = () => {
                                         isActive={
                                             project.id === currentProjectId
                                         }
-                                        onSelect={changeCurrentProjectId}
+                                        onSelect={handleSelectProject}
                                     />
                                 );
                             })

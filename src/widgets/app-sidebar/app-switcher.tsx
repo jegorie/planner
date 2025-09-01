@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, GalleryVerticalEnd } from "lucide-react";
+import { ChevronsUpDown, GalleryVerticalEnd } from "lucide-react";
 
 import {
     DropdownMenu,
@@ -11,18 +11,12 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/shared/ui/sidebar";
-import { useRouterState } from "@tanstack/react-router";
 
 type Props = {
     apps: string[];
 };
 
 export function AppSwitcher({ apps }: Props) {
-    const {
-        location: { pathname },
-    } = useRouterState();
-    const currentApp = pathname.split("/")[1];
-
     return (
         <SidebarMenu>
             <SidebarMenuItem>
@@ -37,7 +31,6 @@ export function AppSwitcher({ apps }: Props) {
                             </div>
                             <div className="flex flex-col gap-0.5 leading-none">
                                 <span className="font-medium">MindKeeper</span>
-                                <span className="">{currentApp}</span>
                             </div>
                             <ChevronsUpDown className="ml-auto" />
                         </SidebarMenuButton>
@@ -51,10 +44,7 @@ export function AppSwitcher({ apps }: Props) {
                                 key={app}
                                 //onSelect={() => setSelectedVersion(version)}
                             >
-                                {app}{" "}
-                                {app === currentApp && (
-                                    <Check className="ml-auto" />
-                                )}
+                                {app}
                             </DropdownMenuItem>
                         ))}
                     </DropdownMenuContent>

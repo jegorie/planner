@@ -9,11 +9,12 @@ import { atom, useAtom, useStore, type PrimitiveAtom } from "jotai";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/_auth/_withSidebar/labels")({
+export const Route = createFileRoute("/_auth/_withSidebar/$projectId/labels")({
     component: RouteComponent,
 });
 
 function RouteComponent() {
+    const { projectId } = Route.useParams();
     const [isEditLabelOpen, setIsEditLabelOpen] = useState(false);
     const [editableLabel, setEditableLabel] =
         useState<PrimitiveAtom<Label> | null>(null);
