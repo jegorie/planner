@@ -11,7 +11,7 @@ export const DeleteTaskDropDownItem: FC<Props> = (props) => {
 
     return (
         <DropdownMenuItem
-            className="text-red-500 focus:text-red-500 focus:bg-red-50 transition-colors"
+            className="text-red-500 focus:bg-destructive transition-colors"
             onClick={onClick}
         >
             <TrashIcon className="text-red-500" />
