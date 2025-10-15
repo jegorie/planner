@@ -4,11 +4,17 @@ import { taskAtoms } from "../model/task-atom";
 import { useAutoSync } from "./use-auto-sync";
 import type { Task } from "../types";
 
-export const useTaskAutoSave = () => {
+type UseTaskAutoSaveProps = {
+    projectId: string;
+};
+
+export const useTaskAutoSave = (props: UseTaskAutoSaveProps) => {
+    const { projectId } = props;
     const tasks = useAtomValue(taskAtoms);
     const store = useStore();
     const { scheduleSync, syncNow, isPending } = useAutoSync({
         debounceMs: 1000,
+        projectId,
     });
 
     // Храним предыдущие состояния задач для сравнения

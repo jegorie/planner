@@ -5,9 +5,11 @@ import type { Task } from "../types";
 
 interface UseAutoSyncProps {
     debounceMs?: number;
+    projectId: string;
 }
 
-export const useAutoSync = ({ debounceMs = 1000 }: UseAutoSyncProps = {}) => {
+export const useAutoSync = (props: UseAutoSyncProps) => {
+    const { debounceMs = 1000, projectId } = props;
     const timeoutRef = useRef<number | null>(null);
     const pendingUpdatesRef = useRef(new Map<string, Task>());
 
@@ -16,7 +18,11 @@ export const useAutoSync = ({ debounceMs = 1000 }: UseAutoSyncProps = {}) => {
             // Отправляем batch обновления
             return Promise.all(
                 tasks.map((task) =>
-                    api.patch(`tasks/${task.id}`, { json: task }).json<Task>(),
+                    api
+                        .patch(`projects/${projectId}/tasks/${task.id}`, {
+                            json: task,
+                        })
+                        .json<Task>(),
                 ),
             );
         },

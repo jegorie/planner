@@ -39,11 +39,11 @@ type Props = {
 const options: { title: string; value: AvailableColors }[] = [
     {
         title: "None",
-        value: "none",
+        value: "NONE",
     },
     {
         title: "Orange",
-        value: "orange",
+        value: "ORANGE",
     },
 ];
 
@@ -55,10 +55,10 @@ export const EditLabel: FC<Props> = (props) => {
         defaultValues: {
             id: "",
             title: "",
-            color: "none",
+            color: "NONE",
             ...defaultValues,
         },
-        values: { id: "", title: "", color: "none", ...defaultValues },
+        values: { id: "", title: "", color: "NONE", ...defaultValues },
     });
     const { control, reset, handleSubmit } = form;
 

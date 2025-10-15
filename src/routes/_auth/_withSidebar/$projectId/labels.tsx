@@ -1,11 +1,10 @@
-import { labelAtoms } from "@/entities/label/atoms/all-labels-atom";
 import type { Label } from "@/entities/label/types";
 import { Button } from "@/shared/ui/button";
 import { SidebarTrigger } from "@/shared/ui/sidebar";
 import { EditLabel } from "@/widgets/edit-label/ui/edit-label";
 import { LabelCard } from "@/widgets/label-card/ui/label-card";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { atom, useAtom, useStore, type PrimitiveAtom } from "jotai";
+import { useStore, type PrimitiveAtom } from "jotai";
 import { PlusIcon } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
@@ -17,6 +16,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/shared/ui/breadcrumb";
+import { useLabelsSync } from "@/entities/label/hooks/use-labels-sync";
 
 export const Route = createFileRoute("/_auth/_withSidebar/$projectId/labels")({
     component: RouteComponent,
@@ -27,21 +27,17 @@ function RouteComponent() {
     const [isEditLabelOpen, setIsEditLabelOpen] = useState(false);
     const [editableLabel, setEditableLabel] =
         useState<PrimitiveAtom<Label> | null>(null);
-    const [labels, setLabels] = useAtom(labelAtoms);
+    const { labels, deleteLabel, createLabel, updateLabel } = useLabelsSync({
+        projectId,
+    });
     const store = useStore();
     const { projects } = useProjectsSync();
-    
+
     const currentProject = useMemo(() => {
         return projects
             .map((projectAtom) => store.get(projectAtom))
             .find((project) => project.id === projectId);
     }, [projects, projectId, store]);
-
-    const deleteLabel = (labelTitle: string) => {
-        setLabels((prev) =>
-            prev.filter((item) => store.get(item).title !== labelTitle),
-        );
-    };
 
     const handleOnOpenChange = (value: boolean) => {
         if (!value) {
@@ -57,10 +53,10 @@ function RouteComponent() {
 
     const handleSubmit = (data: Label) => {
         if (editableLabel) {
-            store.set(editableLabel, data);
+            updateLabel(data);
             setEditableLabel(null);
         } else {
-            setLabels((prev) => [...prev, atom(data)]);
+            createLabel(data);
         }
         setIsEditLabelOpen(false);
     };
@@ -74,7 +70,10 @@ function RouteComponent() {
                         <BreadcrumbList>
                             <BreadcrumbItem>
                                 <BreadcrumbLink asChild>
-                                    <Link to="/$projectId" params={{ projectId }}>
+                                    <Link
+                                        to="/$projectId"
+                                        params={{ projectId }}
+                                    >
                                         <span className="max-w-[150px] truncate">
                                             {currentProject?.title || "Project"}
                                         </span>

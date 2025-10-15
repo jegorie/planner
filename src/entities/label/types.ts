@@ -4,4 +4,4 @@ export type Label = {
     color: AvailableColors;
 };
 
-export type AvailableColors = "orange" | "none";
+export type AvailableColors = "ORANGE" | "NONE";

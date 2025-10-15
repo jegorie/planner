@@ -125,7 +125,7 @@ const EditLabelsCommand: React.FC<CommandProps> = (props) => {
                                     ...availableLabelAtoms,
                                     atom<Label>({
                                         title: search,
-                                        color: "none",
+                                        color: "NONE",
                                         // TODO: generate new id
                                         id: "test",
                                     }),
@@ -149,20 +149,19 @@ const EditLabelsCommand: React.FC<CommandProps> = (props) => {
                         return (
                             <CommandItem
                                 key={availableLabel.title}
-                                value={availableLabel.title}
+                                value={availableLabel.id}
                                 onSelect={() => {
                                     if (isSelected) {
                                         setLabels(
                                             labels.filter(
                                                 (item) =>
-                                                    item !==
-                                                    availableLabel.title,
+                                                    item !== availableLabel.id,
                                             ),
                                         );
                                     } else {
                                         setLabels([
                                             ...(labels ?? []),
-                                            availableLabel.title,
+                                            availableLabel.id,
                                         ]);
                                     }
                                     setOpen(false);

@@ -18,19 +18,16 @@ export const useTasksSync = (props: Props) => {
     // Запрос для получения задач
     const tasksQuery = useQuery({
         queryKey: ["tasks", projectId],
-        queryFn: () =>
-            api
-                .get<Task[]>("tasks", {
-                    searchParams: { projectId: projectId || "" },
-                })
-                .json(),
+        queryFn: () => api.get<Task[]>(`projects/${projectId}/tasks`).json(),
         enabled: !!projectId,
     });
 
     // Мутации для CRUD операций
     const createTaskMutation = useMutation({
         mutationFn: (task: Omit<Task, "id">) =>
-            api.post("tasks", { json: task }).json<Task>(),
+            api
+                .post(`projects/${projectId}/tasks`, { json: task })
+                .json<Task>(),
         onSuccess: (newTask) => {
             // Обновляем локальный store
             setTasks((prev) => [...prev, atom(newTask)]);
@@ -41,7 +38,9 @@ export const useTasksSync = (props: Props) => {
 
     const updateTaskMutation = useMutation({
         mutationFn: (task: Task) =>
-            api.put(`tasks/${task.id}`, { json: task }).json<Task>(),
+            api
+                .put(`projects/${projectId}/tasks/${task.id}`, { json: task })
+                .json<Task>(),
         onSuccess: () => {
             // Не обновляем store здесь, так как данные уже обновлены через атомы
             // Только инвалидируем кэш для консистентности
@@ -50,7 +49,8 @@ export const useTasksSync = (props: Props) => {
     });
 
     const deleteTaskMutation = useMutation({
-        mutationFn: (taskId: string) => api.delete(`tasks/${taskId}`),
+        mutationFn: (taskId: string) =>
+            api.delete(`projects/${projectId}/tasks/${taskId}`),
         onSuccess: (_, deletedTaskId) => {
             // Удаляем из локального store
             setTasks((prev) =>
@@ -91,4 +91,3 @@ export const useTasksSync = (props: Props) => {
         refetch: tasksQuery.refetch,
     };
 };
-

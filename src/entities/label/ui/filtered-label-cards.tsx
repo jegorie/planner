@@ -22,7 +22,7 @@ export const FilteredLabelCards: React.FC<Props> = (props) => {
     const filteredLabels =
         labels &&
         availableLabels.filter((availableLabel) => {
-            return labels.includes(availableLabel.title);
+            return labels.includes(availableLabel.id);
         });
 
     return (

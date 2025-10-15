@@ -3,8 +3,8 @@ import { cn } from "@/shared/lib/utils";
 import type { AvailableColors, Label } from "@/entities/label/types";
 
 const colorsMap: Record<AvailableColors, string> = {
-    none: "bg-primary-foreground",
-    orange: "bg-orange-100 border-orange-500 text-orange-900 dark:bg-orange-950 dark:text-orange-100 dark:border-orange-900",
+    NONE: "bg-primary-foreground",
+    ORANGE: "bg-orange-100 border-orange-500 text-orange-900 dark:bg-orange-950 dark:text-orange-100 dark:border-orange-900",
 };
 
 export const LabelCard: React.FC<Label> = (props) => {

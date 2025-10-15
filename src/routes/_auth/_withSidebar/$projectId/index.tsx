@@ -16,6 +16,7 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
 } from "@/shared/ui/breadcrumb";
+import { useLabelsSync } from "@/entities/label/hooks/use-labels-sync";
 
 export const Route = createFileRoute("/_auth/_withSidebar/$projectId/")({
     component: ProjectRoute,
@@ -39,8 +40,11 @@ function ProjectRoute() {
         createTask,
         deleteTask: deleteTaskMutation,
     } = useTasksSync({ projectId });
+    useLabelsSync({
+        projectId,
+    });
 
-    const { isPending: isSyncing } = useTaskAutoSave();
+    const { isPending: isSyncing } = useTaskAutoSave({ projectId });
 
     const handleSubmit = (data: Omit<Task, "id">) => {
         createTask(data);

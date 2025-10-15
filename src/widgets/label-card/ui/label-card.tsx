@@ -15,8 +15,8 @@ type Props = {
 };
 
 const colorsMap: Record<AvailableColors, string> = {
-    none: "text-primary",
-    orange: "text-orange-500",
+    NONE: "text-primary",
+    ORANGE: "text-orange-500",
 };
 
 export const LabelCard: FC<Props> = (props) => {
@@ -24,7 +24,7 @@ export const LabelCard: FC<Props> = (props) => {
     const label = useAtomValue(atom);
 
     const handleDelete = () => {
-        onDeleteClick(label.title);
+        onDeleteClick(label.id);
     };
 
     const handleEdit = () => {
