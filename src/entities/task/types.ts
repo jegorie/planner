@@ -66,7 +66,9 @@ export type Task = {
     title: string;
     desc: string;
     schedule?: Schedule;
-    labels: string[];
+    labelIds: string[];
     priority: Priority;
     subTasksIds: string[];
 };
+
+export type UpdateTask = Partial<Omit<Task, "id">>;

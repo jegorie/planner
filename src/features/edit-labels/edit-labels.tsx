@@ -1,7 +1,6 @@
 import { Button } from "@/shared/ui/button";
 import { PlusIcon, TagIcon } from "lucide-react";
-import { atom, useAtom, useStore } from "jotai";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import {
@@ -13,7 +12,6 @@ import {
     CommandList,
 } from "@/shared/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { labelAtoms } from "@/entities/label/atoms/all-labels-atom";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import {
     Drawer,
@@ -23,15 +21,16 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/shared/ui/drawer";
-import type { Label } from "@/entities/label/types";
+import { useLabelsSync } from "@/entities/label/hooks/use-labels-sync";
 
 type Props = {
     labels: string[] | undefined;
     setLabels: (labels: string[]) => void;
+    projectId: string;
 };
 
 export const EditLabels: React.FC<Props> = (props) => {
-    const { labels, setLabels } = props;
+    const { labels, setLabels, projectId } = props;
     const [search, setSearch] = useState("");
     const [open, setOpen] = useState(false);
 
@@ -59,6 +58,7 @@ export const EditLabels: React.FC<Props> = (props) => {
                             setOpen={setOpen}
                             labels={labels}
                             setLabels={setLabels}
+                            projectId={projectId}
                         />
                     </div>
                 </DrawerContent>
@@ -80,6 +80,7 @@ export const EditLabels: React.FC<Props> = (props) => {
                     setOpen={setOpen}
                     labels={labels}
                     setLabels={setLabels}
+                    projectId={projectId}
                 />
             </PopoverContent>
         </Popover>
@@ -92,17 +93,17 @@ type CommandProps = {
     setOpen: (open: boolean) => void;
     labels: string[] | undefined;
     setLabels: (labels: string[]) => void;
+    projectId: string;
 };
 
 const EditLabelsCommand: React.FC<CommandProps> = (props) => {
-    const { search, setSearch, setOpen, labels, setLabels } = props;
+    const { search, setSearch, setOpen, labels, setLabels, projectId } = props;
 
-    const store = useStore();
-    const [availableLabelAtoms, setAvailableLabelAtoms] = useAtom(labelAtoms);
-    const availableLabels = useMemo(
-        () => availableLabelAtoms.map((item) => store.get(item)),
-        [store.get, availableLabelAtoms],
-    );
+    const {
+        labels: availableLabels,
+        createLabel,
+        isCreating,
+    } = useLabelsSync({ projectId });
 
     return (
         <Command>
@@ -119,18 +120,23 @@ const EditLabelsCommand: React.FC<CommandProps> = (props) => {
                             variant={"outline"}
                             size="sm"
                             className="mt-1"
+                            disabled={isCreating}
                             onClick={() => {
-                                setLabels([...(labels ?? []), search]);
-                                setAvailableLabelAtoms([
-                                    ...availableLabelAtoms,
-                                    atom<Label>({
+                                createLabel(
+                                    {
                                         title: search,
                                         color: "NONE",
-                                        // TODO: generate new id
-                                        id: "test",
-                                    }),
-                                ]);
-                                setOpen(false);
+                                    },
+                                    {
+                                        onSuccess: (label) => {
+                                            setLabels([
+                                                ...(labels ?? []),
+                                                label.id,
+                                            ]);
+                                            setOpen(false);
+                                        },
+                                    },
+                                );
                             }}
                         >
                             <PlusIcon />
@@ -143,12 +149,12 @@ const EditLabelsCommand: React.FC<CommandProps> = (props) => {
                         const isSelected =
                             labels &&
                             labels.findIndex(
-                                (item) => item === availableLabel.title,
+                                (item) => item === availableLabel.id,
                             ) >= 0;
 
                         return (
                             <CommandItem
-                                key={availableLabel.title}
+                                key={availableLabel.id}
                                 value={availableLabel.id}
                                 onSelect={() => {
                                     if (isSelected) {

@@ -30,10 +30,11 @@ type Props = {
     defaultValues?: Task;
     parentTaskId?: string;
     onSubmit: (data: Task) => void;
+    projectId: string;
 };
 
 export const EditTask: FC<Props> = (props) => {
-    const { open, onOpenChange, defaultValues, onSubmit } = props;
+    const { open, onOpenChange, defaultValues, onSubmit, projectId } = props;
     const isEditing = !!defaultValues;
     const form = useForm<Task>({
         mode: "onChange",
@@ -42,7 +43,7 @@ export const EditTask: FC<Props> = (props) => {
             checked: false,
             title: "",
             desc: "",
-            labels: [],
+            labelIds: [],
             subTasksIds: [],
             ...defaultValues,
         },
@@ -100,17 +101,21 @@ export const EditTask: FC<Props> = (props) => {
                                 </FormItem>
                             )}
                         />
-                        <FilteredLabelCards labels={watch("labels")} />
+                        <FilteredLabelCards
+                            labels={watch("labelIds")}
+                            projectId={projectId}
+                        />
                         <div className="flex gap-2 justify-between">
                             <div />
                             <div className="flex">
                                 <Controller
                                     control={control}
-                                    name="labels"
+                                    name="labelIds"
                                     render={({ field }) => (
                                         <EditLabels
                                             labels={field.value}
                                             setLabels={field.onChange}
+                                            projectId={projectId}
                                         />
                                     )}
                                 />
@@ -119,8 +124,8 @@ export const EditTask: FC<Props> = (props) => {
                                     name="priority"
                                     render={({ field }) => (
                                         <EditPriority
-                                            currentPriority={field.value}
-                                            setCurrentPriority={field.onChange}
+                                            value={field.value}
+                                            onChange={field.onChange}
                                         />
                                     )}
                                 />

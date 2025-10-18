@@ -22,22 +22,22 @@ import { SelectTrigger } from "@radix-ui/react-select";
 import { PrioritySelectItem } from "./priority-select-item";
 
 type Props = {
-    currentPriority: Priority;
-    setCurrentPriority: (priority: Priority) => void;
+    value: Priority;
+    onChange: (priority: Priority) => void;
 };
 
 export const EditPriority: React.FC<Props> = (props) => {
-    const { currentPriority, setCurrentPriority } = props;
+    const { value, onChange } = props;
     const [open, setOpen] = useState(false);
 
     const isMobile = useIsMobile();
 
     const handlePrioritySelect = useCallback(
-        (priority: string | Priority) => {
-            setCurrentPriority(+priority);
+        (priority: Priority) => {
+            onChange(priority);
             setOpen(false);
         },
-        [setCurrentPriority],
+        [onChange],
     );
 
     if (isMobile) {
@@ -45,7 +45,7 @@ export const EditPriority: React.FC<Props> = (props) => {
             <Drawer open={open} onOpenChange={setOpen}>
                 <DrawerTrigger asChild>
                     <Button variant="ghost" size="icon">
-                        <PriorityIcon priority={currentPriority} />
+                        <PriorityIcon priority={value} />
                     </Button>
                 </DrawerTrigger>
                 <DrawerContent className="h-[80dvh]">
@@ -56,22 +56,22 @@ export const EditPriority: React.FC<Props> = (props) => {
                     <div className="mt-4 border-t text-base p-2 flex flex-col gap-1">
                         <PriorityItem
                             priority={Priority.HIGH}
-                            currentPriority={currentPriority}
+                            currentPriority={value}
                             onChange={handlePrioritySelect}
                         />
                         <PriorityItem
                             priority={Priority.MEDIUM}
-                            currentPriority={currentPriority}
+                            currentPriority={value}
                             onChange={handlePrioritySelect}
                         />
                         <PriorityItem
                             priority={Priority.LOW}
-                            currentPriority={currentPriority}
+                            currentPriority={value}
                             onChange={handlePrioritySelect}
                         />
                         <PriorityItem
                             priority={Priority.NONE}
-                            currentPriority={currentPriority}
+                            currentPriority={value}
                             onChange={handlePrioritySelect}
                         />
                     </div>
@@ -81,13 +81,10 @@ export const EditPriority: React.FC<Props> = (props) => {
     }
 
     return (
-        <Select
-            value={currentPriority.toString()}
-            onValueChange={handlePrioritySelect}
-        >
+        <Select value={value.toString()} onValueChange={handlePrioritySelect}>
             <SelectTrigger asChild>
                 <Button variant="ghost" size="icon">
-                    <PriorityIcon priority={currentPriority} />
+                    <PriorityIcon priority={value} />
                 </Button>
             </SelectTrigger>
             <SelectContent align="center" className="w-52">

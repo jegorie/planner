@@ -1,27 +1,21 @@
-import { useAtomValue, useStore } from "jotai";
 import { AnimatePresence, motion } from "motion/react";
-import { labelAtoms } from "@/entities/label/atoms/all-labels-atom";
 import { cn } from "@/shared/lib/utils";
-import { useMemo } from "react";
 import { LabelCard } from "@/entities/label/ui/label-card";
+import { useLabelsSync } from "../hooks/use-labels-sync";
 
 type Props = {
     labels: string[];
     className?: string;
+    projectId: string;
 };
 
 export const FilteredLabelCards: React.FC<Props> = (props) => {
-    const { labels, className } = props;
-    const store = useStore();
-    const availableLabelAtoms = useAtomValue(labelAtoms);
-    const availableLabels = useMemo(
-        () => availableLabelAtoms.map((item) => store.get(item)),
-        [store.get, availableLabelAtoms],
-    );
+    const { labels, className, projectId } = props;
+    const { labels: availableLabels } = useLabelsSync({ projectId });
 
     const filteredLabels =
         labels &&
-        availableLabels.filter((availableLabel) => {
+        availableLabels?.filter((availableLabel) => {
             return labels.includes(availableLabel.id);
         });
 
@@ -48,7 +42,7 @@ export const FilteredLabelCards: React.FC<Props> = (props) => {
                 >
                     <AnimatePresence initial={false}>
                         {filteredLabels.map((label) => {
-                            return <LabelCard key={label.title} {...label} />;
+                            return <LabelCard key={label.id} {...label} />;
                         })}
                     </AnimatePresence>
                 </motion.div>

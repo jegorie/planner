@@ -1,5 +1,5 @@
 import { Checked } from "@/entities/task/ui/task-card/checked";
-import type { Task } from "@/entities/task/types";
+import type { Task, UpdateTask } from "@/entities/task/types";
 import {
     AlarmClockIcon,
     ChevronUpIcon,
@@ -7,46 +7,43 @@ import {
     PinIcon,
     PlusIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn, formatSmartDate } from "@/shared/lib/utils";
-import { useAtom, useAtomValue, type PrimitiveAtom } from "jotai";
 import { Title } from "@/entities/task/ui/task-card/title";
 import { Desc } from "@/entities/task/ui/task-card/desc";
 import { Toolbar } from "@/entities/task/ui/task-card/toolbar/toolbar";
 import { Button } from "@/shared/ui/button";
 import { EditLabels } from "@/features/edit-labels/edit-labels";
 import { EditPriority } from "@/features/edit-priority";
-import { focusAtom } from "jotai-optics";
 import { DeleteTaskDropDownItem } from "@/features/delete-task/ui/delete-task-dropdown-item";
 import { ExtraMenuButton } from "@/shared/ui/extra-menu-button";
 import { FilteredLabelCards } from "@/entities/label/ui/filtered-label-cards";
 import { EditSchedule } from "@/features/edit-schedule/ui/edit-schedule";
 
 type Props = {
-    atom: PrimitiveAtom<Task>;
+    task: Task;
     onDeleteClick: (id: string) => void;
+    onChange: (task: Pick<Task, "id"> & UpdateTask) => void;
+    projectId: string;
 };
 
 export const TaskCard: React.FC<Props> = (props) => {
-    const { atom, onDeleteClick } = props;
+    const { task, onDeleteClick, onChange, projectId } = props;
     const [isOpen, setIsOpen] = useState(false);
-    const task = useAtomValue(atom);
-    const [currentPriority, setCurrentPriority] = useAtom(
-        useMemo(() => {
-            return focusAtom(atom, (optic) => optic.prop("priority"));
-        }, [atom]),
-    );
-    const [labels, setLabels] = useAtom(
-        useMemo(() => {
-            return focusAtom(atom, (optic) => optic.prop("labels"));
-        }, [atom]),
-    );
+    const currentPriority = task.priority;
+    const labelIds = task.labelIds;
     const date = task.schedule?.date;
 
     const handleDelete = () => {
         onDeleteClick(task.id);
     };
+
+    const handleChange =
+        <Key extends keyof UpdateTask>(key: Key) =>
+        (value: Task[Key]) => {
+            onChange({ id: task.id, [key]: value });
+        };
 
     return (
         <div
@@ -64,7 +61,11 @@ export const TaskCard: React.FC<Props> = (props) => {
             }}
         >
             <div className="flex items-start justify-between">
-                <Checked atom={atom} />
+                <Checked
+                    checked={task.checked}
+                    onChange={handleChange("checked")}
+                    currentPriority={currentPriority}
+                />
                 <AnimatePresence initial={false}>
                     {!isOpen && date && (
                         <motion.div
@@ -91,7 +92,11 @@ export const TaskCard: React.FC<Props> = (props) => {
                         </motion.div>
                     )}
                 </AnimatePresence>
-                <Title atom={atom} isOpen={isOpen} />
+                <Title
+                    value={task.title}
+                    onChange={handleChange("title")}
+                    isOpen={isOpen}
+                />
                 <Button
                     variant="ghost"
                     size="icon"
@@ -109,13 +114,24 @@ export const TaskCard: React.FC<Props> = (props) => {
                 </Button>
             </div>
             <AnimatePresence>
-                {isOpen && <Desc atom={atom} isOpen={isOpen} />}
+                {isOpen && (
+                    <Desc
+                        isOpen={isOpen}
+                        value={task.desc}
+                        onChange={handleChange("desc")}
+                    />
+                )}
             </AnimatePresence>
-            <FilteredLabelCards labels={labels} className="mt-1 ml-7" />
+            <FilteredLabelCards
+                labels={labelIds}
+                projectId={projectId}
+                className="mt-1 ml-7"
+            />
             <AnimatePresence>
                 {isOpen && (
                     <Toolbar isOpen={isOpen}>
-                        <EditSchedule atom={atom} />
+                        {/* <EditSchedule atom={atom} /> */}
+                        <div>1</div>
                         <div className="flex justify-between sm:justify-start">
                             <div>
                                 <Button variant="ghost" size="icon" disabled>
@@ -125,12 +141,13 @@ export const TaskCard: React.FC<Props> = (props) => {
                                     <PaperclipIcon />
                                 </Button>
                                 <EditLabels
-                                    labels={labels}
-                                    setLabels={setLabels}
+                                    labels={labelIds}
+                                    setLabels={handleChange("labelIds")}
+                                    projectId={projectId}
                                 />
                                 <EditPriority
-                                    currentPriority={currentPriority}
-                                    setCurrentPriority={setCurrentPriority}
+                                    value={currentPriority}
+                                    onChange={handleChange("priority")}
                                 />
                                 <Button variant="ghost" size="icon" disabled>
                                     <AlarmClockIcon />

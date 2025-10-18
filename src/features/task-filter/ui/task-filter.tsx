@@ -1,8 +1,7 @@
-import { labelAtoms } from "@/entities/label/atoms/all-labels-atom";
 import { Priority } from "@/entities/task/types";
 import { cn } from "@/shared/lib/utils";
 import { FadeCard } from "@/shared/ui/animations/fade-card";
-import { useAtom, useAtomValue, useStore } from "jotai";
+import { useAtom } from "jotai";
 import { useState, useMemo, useCallback } from "react";
 import {
     selectedLabelsAtom,
@@ -17,14 +16,15 @@ import { FilterDatePicker } from "./filter-date-picker";
 import { Input } from "@/shared/ui/input";
 import { ListFilterPlusIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/shared/ui/button";
+import { useLabelsSync } from "@/entities/label/hooks/use-labels-sync";
 
 type Props = {
     onNewTaskClick: () => void;
+    projectId: string;
 };
 
 export const TasksFilter: React.FC<Props> = (props) => {
-    const { onNewTaskClick } = props;
-    const store = useStore();
+    const { onNewTaskClick, projectId } = props;
     const [isOpen, setIsOpen] = useState(false);
 
     // Filter atoms
@@ -36,10 +36,7 @@ export const TasksFilter: React.FC<Props> = (props) => {
     const [sortOrder, setSortOrder] = useAtom(sortOrderAtom);
 
     // Labels data
-    const labelAtomsArray = useAtomValue(labelAtoms);
-    const labelValues = useMemo(() => {
-        return labelAtomsArray.map((atom) => store.get(atom));
-    }, [labelAtomsArray, store.get]);
+    const { labels: labelValues } = useLabelsSync({ projectId });
 
     // Helper for single label selection (legacy UI support)
     const selectedLabel =
@@ -55,19 +52,14 @@ export const TasksFilter: React.FC<Props> = (props) => {
         [setSelectedLabels],
     );
 
-    const countSortingEl =
-        +(selectedLabel !== "all") +
-        +(selectedPriority !== "all") +
-        +(selectedDate !== "all");
-
     // Filter configurations for rendering
     const filterConfigs = useMemo(() => {
         const labelOptions: FilterOption[] = [
             { value: "all", label: "All labels" },
-            ...labelValues.map((label) => ({
+            ...(labelValues?.map((label) => ({
                 value: label.id,
                 label: label.title,
-            })),
+            })) ?? []),
         ];
 
         const priorityOptions: FilterOption[] = [
@@ -104,7 +96,7 @@ export const TasksFilter: React.FC<Props> = (props) => {
                 value: selectedPriority.toString(),
                 onValueChange: (value: string) =>
                     setSelectedPriority(
-                        value === "all" ? "all" : (+value as Priority),
+                        value === "all" ? "all" : (value as Priority),
                     ),
                 options: priorityOptions,
                 placeholder: "All priorities",

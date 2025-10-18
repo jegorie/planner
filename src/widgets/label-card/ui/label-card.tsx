@@ -3,15 +3,14 @@ import { DeleteTaskDropDownItem } from "@/features/delete-task/ui/delete-task-dr
 import { EditLabelDropDownItem } from "@/features/edit-label/ui/edit-label-dropdown-item";
 import { cn } from "@/shared/lib/utils";
 import { ExtraMenuButton } from "@/shared/ui/extra-menu-button";
-import { useAtomValue, type PrimitiveAtom } from "jotai";
 import { TagIcon } from "lucide-react";
 import type { FC } from "react";
 
 type Props = {
-    atom: PrimitiveAtom<Label>;
+    label: Label;
     tasksLength?: number;
     onDeleteClick: (titleName: string) => void;
-    onEditClick: (labelAtom: PrimitiveAtom<Label>) => void;
+    onEditClick: (labelAtom: Label) => void;
 };
 
 const colorsMap: Record<AvailableColors, string> = {
@@ -20,15 +19,14 @@ const colorsMap: Record<AvailableColors, string> = {
 };
 
 export const LabelCard: FC<Props> = (props) => {
-    const { atom, tasksLength = 0, onDeleteClick, onEditClick } = props;
-    const label = useAtomValue(atom);
+    const { label, tasksLength = 0, onDeleteClick, onEditClick } = props;
 
     const handleDelete = () => {
         onDeleteClick(label.id);
     };
 
     const handleEdit = () => {
-        onEditClick(atom);
+        onEditClick(label);
     };
 
     return (

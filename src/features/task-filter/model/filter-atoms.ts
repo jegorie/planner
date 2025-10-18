@@ -41,7 +41,7 @@ export const isFilterActiveAtom = atom<boolean>((get) => {
 });
 
 // Reset all filters
-export const resetFiltersAtom = atom(null, (get, set) => {
+export const resetFiltersAtom = atom(null, (_, set) => {
     set(selectedLabelsAtom, []);
     set(selectedPriorityAtom, "all");
     set(selectedDateAtom, "all");

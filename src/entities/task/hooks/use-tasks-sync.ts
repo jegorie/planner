@@ -1,9 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAtom, useStore, atom } from "jotai";
-import { useEffect } from "react";
-import { taskAtoms } from "../model/task-atom";
 import { api } from "@/shared/lib/api";
-import type { Task } from "../types";
+import type { Task, UpdateTask } from "../types";
 
 type Props = {
     projectId?: string;
@@ -12,8 +9,6 @@ type Props = {
 export const useTasksSync = (props: Props) => {
     const { projectId } = props;
     const queryClient = useQueryClient();
-    const [tasks, setTasks] = useAtom(taskAtoms);
-    const store = useStore();
 
     // Запрос для получения задач
     const tasksQuery = useQuery({
@@ -28,22 +23,17 @@ export const useTasksSync = (props: Props) => {
             api
                 .post(`projects/${projectId}/tasks`, { json: task })
                 .json<Task>(),
-        onSuccess: (newTask) => {
-            // Обновляем локальный store
-            setTasks((prev) => [...prev, atom(newTask)]);
-            // Инвалидируем кэш
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
     });
 
     const updateTaskMutation = useMutation({
-        mutationFn: (task: Task) =>
+        mutationFn: (task: Pick<Task, "id"> & UpdateTask) =>
             api
-                .put(`projects/${projectId}/tasks/${task.id}`, { json: task })
+                .patch(`projects/${projectId}/tasks/${task.id}`, { json: task })
                 .json<Task>(),
         onSuccess: () => {
-            // Не обновляем store здесь, так как данные уже обновлены через атомы
-            // Только инвалидируем кэш для консистентности
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
     });
@@ -51,29 +41,13 @@ export const useTasksSync = (props: Props) => {
     const deleteTaskMutation = useMutation({
         mutationFn: (taskId: string) =>
             api.delete(`projects/${projectId}/tasks/${taskId}`),
-        onSuccess: (_, deletedTaskId) => {
-            // Удаляем из локального store
-            setTasks((prev) =>
-                prev.filter((taskAtom) => {
-                    const task = store.get(taskAtom);
-                    return task.id !== deletedTaskId;
-                }),
-            );
-            // Инвалидируем кэш
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
         },
     });
 
-    // Синхронизация: загружаем данные в store при получении с сервера
-    useEffect(() => {
-        if (tasksQuery.data) {
-            setTasks(tasksQuery.data.map((task) => atom(task)));
-        }
-    }, [tasksQuery.data, setTasks]);
-
     return {
-        // Данные и состояние
-        tasks,
+        tasks: tasksQuery.data,
         isLoading: tasksQuery.isLoading,
         error: tasksQuery.error,
 

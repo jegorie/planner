@@ -1,26 +1,22 @@
-import { useAtom, type PrimitiveAtom } from "jotai";
-import { focusAtom } from "jotai-optics";
-import { useMemo, useRef } from "react";
-import type { Task } from "../../types";
+import { useRef } from "react";
 import { motion } from "motion/react";
 import Quill from "quill";
 import { Editor } from "@/shared/ui/editor";
+import { useDebouncedCallback } from "use-debounce";
 
 const Delta = Quill.import("delta");
 
 type Props = {
-    atom: PrimitiveAtom<Task>;
+    value: string;
+    onChange: (value: string) => void;
     isOpen: boolean;
 };
 
 export const Desc: React.FC<Props> = (props) => {
     const quillRef = useRef<Quill>(null);
-    const { atom, isOpen } = props;
-    const [desc, setDesc] = useAtom(
-        useMemo(() => {
-            return focusAtom(atom, (optic) => optic.prop("desc"));
-        }, [atom]),
-    );
+    const { value, isOpen, onChange } = props;
+
+    const debouncedOnChange = useDebouncedCallback(onChange, 1000);
 
     return (
         <motion.div
@@ -46,15 +42,14 @@ export const Desc: React.FC<Props> = (props) => {
         >
             <Editor
                 ref={quillRef}
-                defaultValue={new Delta().insert(desc || "")}
+                defaultValue={new Delta().insert(value || "")}
                 onTextChange={() => {
                     if (quillRef.current) {
-                        const newDesc = quillRef.current?.getText(
+                        const desc = quillRef.current?.getText(
                             0,
                             quillRef.current.getLength(),
                         );
-                        console.log('📝 Desc changed:', { oldDesc: desc, newDesc });
-                        setDesc(newDesc);
+                        debouncedOnChange(desc);
                     }
                 }}
                 quillOptions={{ theme: "bubble", modules: { toolbar: false } }}

@@ -4,7 +4,7 @@ import { SidebarTrigger } from "@/shared/ui/sidebar";
 import { EditLabel } from "@/widgets/edit-label/ui/edit-label";
 import { LabelCard } from "@/widgets/label-card/ui/label-card";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useStore, type PrimitiveAtom } from "jotai";
+import { useStore } from "jotai";
 import { PlusIcon } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
@@ -25,8 +25,7 @@ export const Route = createFileRoute("/_auth/_withSidebar/$projectId/labels")({
 function RouteComponent() {
     const { projectId } = Route.useParams();
     const [isEditLabelOpen, setIsEditLabelOpen] = useState(false);
-    const [editableLabel, setEditableLabel] =
-        useState<PrimitiveAtom<Label> | null>(null);
+    const [editableLabel, setEditableLabel] = useState<Label | null>(null);
     const { labels, deleteLabel, createLabel, updateLabel } = useLabelsSync({
         projectId,
     });
@@ -46,7 +45,7 @@ function RouteComponent() {
         setIsEditLabelOpen(value);
     };
 
-    const editLabel = (label: PrimitiveAtom<Label>) => {
+    const editLabel = (label: Label) => {
         setIsEditLabelOpen(true);
         setEditableLabel(label);
     };
@@ -89,10 +88,10 @@ function RouteComponent() {
                 </div>
             </header>
             <main className="flex flex-col items-center px-5 relative flex-auto">
-                {labels.map((atom) => (
+                {labels?.map((label) => (
                     <LabelCard
-                        key={atom.toString()}
-                        atom={atom}
+                        key={label.id}
+                        label={label}
                         onDeleteClick={deleteLabel}
                         onEditClick={editLabel}
                     />
@@ -111,7 +110,7 @@ function RouteComponent() {
                 open={isEditLabelOpen}
                 onOpenChange={handleOnOpenChange}
                 onSubmit={handleSubmit}
-                defaultValues={editableLabel && store.get(editableLabel)}
+                defaultValues={editableLabel}
             />
         </div>
     );
