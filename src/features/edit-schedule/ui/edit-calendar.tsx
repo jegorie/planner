@@ -3,9 +3,6 @@ import { Button } from "@/shared/ui/button";
 import { Calendar } from "@/shared/ui/calendar";
 import { ChevronLeftIcon } from "lucide-react";
 import styles from "./styles.module.css";
-import { useAtom, type PrimitiveAtom } from "jotai";
-import { useMemo } from "react";
-import { focusAtom } from "jotai-optics";
 import type { Task } from "@/entities/task/types";
 import { SwitchCardChild } from "@/shared/ui/switch-card";
 import { Separator } from "@/shared/ui/separator";
@@ -13,16 +10,12 @@ import { Separator } from "@/shared/ui/separator";
 type Props = {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
-    atom: PrimitiveAtom<Task>;
+    schedule: Task["schedule"];
+    setSchedule: (value: Task["schedule"]) => void;
 };
 
 export const EditCalendar: React.FC<Props> = (props) => {
-    const { isOpen, setIsOpen, atom } = props;
-    const [schedule, setSchedule] = useAtom(
-        useMemo(() => {
-            return focusAtom(atom, (optic) => optic.prop("schedule"));
-        }, [atom]),
-    );
+    const { isOpen, setIsOpen, schedule, setSchedule } = props;
 
     return (
         <SwitchCardChild
@@ -57,10 +50,10 @@ export const EditCalendar: React.FC<Props> = (props) => {
                         setSchedule(undefined);
                         return;
                     }
-                    setSchedule((prev) => ({
-                        ...prev,
+                    setSchedule({
+                        ...schedule,
                         date: day.toISOString(),
-                    }));
+                    });
                     setIsOpen(false);
                 }}
                 className="px-0 mx-auto"

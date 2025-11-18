@@ -2,9 +2,6 @@ import { cn, getCapitalizedString } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import styles from "./styles.module.css";
-import { useAtom, type PrimitiveAtom } from "jotai";
-import { useMemo } from "react";
-import { focusAtom } from "jotai-optics";
 import { RepeatPeriods, type Task } from "@/entities/task/types";
 import { SwitchCardChild } from "@/shared/ui/switch-card";
 import { Separator } from "@/shared/ui/separator";
@@ -12,7 +9,8 @@ import { Separator } from "@/shared/ui/separator";
 type Props = {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
-    atom: PrimitiveAtom<Task>;
+    schedule: Task["schedule"];
+    setSchedule: (value: Task["schedule"]) => void;
 };
 
 type BasicRepeatPeriods = Exclude<RepeatPeriods, RepeatPeriods.CUSTOM>;
@@ -37,21 +35,16 @@ const RepeatButton = (props: RepeatButtonProps) => {
 };
 
 export const EditRepeatTime: React.FC<Props> = (props) => {
-    const { isOpen, setIsOpen, atom } = props;
-    const [schedule, setSchedule] = useAtom(
-        useMemo(() => {
-            return focusAtom(atom, (optic) => optic.prop("schedule"));
-        }, [atom]),
-    );
+    const { isOpen, setIsOpen, schedule, setSchedule } = props;
     const currentRepeat = schedule?.repeat?.type;
 
     const handleRepeat = (
         type: Exclude<RepeatPeriods, RepeatPeriods.CUSTOM>,
     ) => {
-        setSchedule((prev) => ({
-            date: prev?.date || new Date().toISOString(),
+        setSchedule({
+            date: schedule?.date || new Date().toISOString(),
             repeat: { type },
-        }));
+        });
         setIsOpen(false);
     };
 

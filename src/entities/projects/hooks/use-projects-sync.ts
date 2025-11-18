@@ -14,6 +14,7 @@ export const useProjectsSync = () => {
     const projectsQuery = useQuery({
         queryKey: ["projects"],
         queryFn: () => api.get<Project[]>("projects").json(),
+        staleTime: 60000,
     });
 
     // Мутации для CRUD операций

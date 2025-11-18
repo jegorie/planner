@@ -130,8 +130,10 @@ export const TaskCard: React.FC<Props> = (props) => {
             <AnimatePresence>
                 {isOpen && (
                     <Toolbar isOpen={isOpen}>
-                        {/* <EditSchedule atom={atom} /> */}
-                        <div>1</div>
+                        <EditSchedule
+                            schedule={task.schedule}
+                            setSchedule={handleChange("schedule")}
+                        />
                         <div className="flex justify-between sm:justify-start">
                             <div>
                                 <Button variant="ghost" size="icon" disabled>

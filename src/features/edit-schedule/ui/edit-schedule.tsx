@@ -8,30 +8,24 @@ import {
     StarIcon,
     XIcon,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { format, addDays, addWeeks } from "date-fns";
 
 import styles from "./styles.module.css";
 import { cn, formatSmartDate } from "@/shared/lib/utils";
 import { Separator } from "@/shared/ui/separator";
-import { useAtom, type PrimitiveAtom } from "jotai";
 import { RepeatPeriods, type Task } from "@/entities/task/types";
-import { focusAtom } from "jotai-optics";
 import { EditCalendar } from "./edit-calendar";
 import { SwitchCardParent } from "@/shared/ui/switch-card";
 import { EditRepeatTime } from "./edit-repeat-time";
 
 type Props = {
-    atom: PrimitiveAtom<Task>;
+    schedule: Task["schedule"];
+    setSchedule: (value: Task["schedule"]) => void;
 };
 
 export const EditSchedule: React.FC<Props> = (props) => {
-    const { atom } = props;
-    const [schedule, setSchedule] = useAtom(
-        useMemo(() => {
-            return focusAtom(atom, (optic) => optic.prop("schedule"));
-        }, [atom]),
-    );
+    const { schedule, setSchedule } = props;
     const [open, setOpen] = useState(false);
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
     const [isRepeatTimeOpen, setIsRepeatTimeOpen] = useState(false);
@@ -42,7 +36,7 @@ export const EditSchedule: React.FC<Props> = (props) => {
             setSchedule(undefined);
             return;
         }
-        setSchedule((prev) => ({ ...prev, date: selected.toISOString() }));
+        setSchedule({ ...schedule, date: selected.toISOString() });
         setOpen(false);
     };
 
@@ -153,7 +147,7 @@ export const EditSchedule: React.FC<Props> = (props) => {
                                 Repeat
                             </div>
                             <div className="flex gap-2 items-center">
-                                {typeof schedule?.repeat?.type === "number" && (
+                                {schedule?.repeat?.type && (
                                     <span className="text-primary/50">
                                         {RepeatPeriods[schedule.repeat.type]}
                                     </span>
@@ -179,14 +173,16 @@ export const EditSchedule: React.FC<Props> = (props) => {
                         </Button>
                     </SwitchCardParent>
                     <EditCalendar
-                        atom={atom}
+                        schedule={schedule}
+                        setSchedule={setSchedule}
                         isOpen={isDatePickerOpen}
                         setIsOpen={setIsDatePickerOpen}
                     />
                     <EditRepeatTime
+                        schedule={schedule}
+                        setSchedule={setSchedule}
                         isOpen={isRepeatTimeOpen}
                         setIsOpen={setIsRepeatTimeOpen}
-                        atom={atom}
                     />
                 </PopoverContent>
             </Popover>

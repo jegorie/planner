@@ -13,8 +13,12 @@ export const useTasksSync = (props: Props) => {
     // Запрос для получения задач
     const tasksQuery = useQuery({
         queryKey: ["tasks", projectId],
-        queryFn: () => api.get<Task[]>(`projects/${projectId}/tasks`).json(),
+        queryFn: () =>
+            api
+                .get<Task[]>(`projects/${projectId}/tasks?sortBy=position`)
+                .json(),
         enabled: !!projectId,
+        staleTime: 60000,
     });
 
     // Мутации для CRUD операций

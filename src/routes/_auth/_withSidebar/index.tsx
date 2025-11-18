@@ -17,9 +17,12 @@ function App() {
             const inboxProject = projects
                 .map((projectAtom) => store.get(projectAtom))
                 .find((project) => project.isInbox);
-            
+
             if (inboxProject) {
-                navigate({ to: "/$projectId", params: { projectId: inboxProject.id } });
+                navigate({
+                    to: "/$projectId",
+                    params: { projectId: inboxProject.id },
+                });
             }
         }
     }, [projects, isLoading, navigate, store]);

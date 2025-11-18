@@ -6,27 +6,27 @@ export enum Priority {
 }
 
 export enum RepeatPeriods {
-    NONE = 0,
-    DAILY = 1,
-    WEEKLY = 2,
-    MONTHLY = 3,
-    YEARLY = 4,
-    CUSTOM = 5,
+    NONE = "NONE",
+    DAILY = "DAILY",
+    WEEKLY = "WEEKLY",
+    MONTHLY = "MONTHLY",
+    YEARLY = "YEARLY",
+    CUSTOM = "CUSTOM",
 }
 
 enum CustomRepeatPeriods {
-    MINUTE = 1,
-    HOURS = 2,
-    DAILY = 3,
-    WEEKLY = 4,
-    MONTHLY = 5,
-    YEARLY = 6,
+    MINUTE = "MINUTE",
+    HOURS = "HOURS",
+    DAILY = "DAILY",
+    WEEKLY = "WEEKLY",
+    MONTHLY = "MONTHLY",
+    YEARLY = "YEARLY",
 }
 
 enum EndType {
-    NEVER = 0,
-    ON_DATE = 1,
-    AFTER = 2,
+    NEVER = "NEVER",
+    ON_DATE = "ON_DATE",
+    AFTER = "AFTER",
 }
 
 type OnDateEnd = {
@@ -69,6 +69,8 @@ export type Task = {
     labelIds: string[];
     priority: Priority;
     subTasksIds: string[];
+    updatedAt: string;
+    createdAt: string;
 };
 
 export type UpdateTask = Partial<Omit<Task, "id">>;
