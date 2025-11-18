@@ -5,6 +5,9 @@ import { projectAtoms } from "../atoms/projects-atoms";
 import { api } from "@/shared/lib/api";
 import type { Project } from "../types";
 
+export type CreateProject = Pick<Project, "title">;
+export type UpdateProject = Pick<Project, "title" | "id">;
+
 export const useProjectsSync = () => {
     const queryClient = useQueryClient();
     const [projects, setProjects] = useAtom(projectAtoms);
@@ -19,7 +22,7 @@ export const useProjectsSync = () => {
 
     // Мутации для CRUD операций
     const createProjectMutation = useMutation({
-        mutationFn: (project: Omit<Project, "id" | "isInbox">) =>
+        mutationFn: (project: CreateProject) =>
             api.post("projects", { json: project }).json<Project>(),
         onSuccess: (newProject) => {
             setProjects((prev) => [...prev, atom(newProject)]);
@@ -28,7 +31,7 @@ export const useProjectsSync = () => {
     });
 
     const updateProjectMutation = useMutation({
-        mutationFn: (project: Project) =>
+        mutationFn: (project: UpdateProject) =>
             api
                 .patch(`projects/${project.id}`, { json: project })
                 .json<Project>(),

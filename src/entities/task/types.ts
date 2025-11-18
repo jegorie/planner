@@ -71,6 +71,7 @@ export type Task = {
     subTasksIds: string[];
     updatedAt: string;
     createdAt: string;
+    position: number;
 };
 
-export type UpdateTask = Partial<Omit<Task, "id">>;
+export type UpdateTask = Partial<Omit<Task, "id">> & { afterTaskId?: string };

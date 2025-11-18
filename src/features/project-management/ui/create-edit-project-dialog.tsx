@@ -5,7 +5,10 @@ import {
     DialogTitle,
 } from "@/shared/ui/dialog";
 import { ProjectForm } from "@/entities/projects/ui/project-form";
-import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
+import {
+    useProjectsSync,
+    type CreateProject,
+} from "@/entities/projects/hooks/use-projects-sync";
 import type { Project } from "@/entities/projects/types";
 import { toast } from "sonner";
 
@@ -20,7 +23,7 @@ export const ProjectDialog: React.FC<Props> = (props) => {
     const { createProject, updateProject, isCreating, isUpdating } =
         useProjectsSync();
 
-    const handleSubmit = (data: { title: string }) => {
+    const handleSubmit = (data: CreateProject) => {
         if (project) {
             updateProject(
                 { ...project, title: data.title },
@@ -65,4 +68,3 @@ export const ProjectDialog: React.FC<Props> = (props) => {
         </Dialog>
     );
 };
-

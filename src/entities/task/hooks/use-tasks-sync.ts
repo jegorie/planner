@@ -23,7 +23,7 @@ export const useTasksSync = (props: Props) => {
 
     // Мутации для CRUD операций
     const createTaskMutation = useMutation({
-        mutationFn: (task: Omit<Task, "id">) =>
+        mutationFn: (task: UpdateTask) =>
             api
                 .post(`projects/${projectId}/tasks`, { json: task })
                 .json<Task>(),

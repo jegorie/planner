@@ -40,7 +40,7 @@ export const TaskCard: React.FC<Props> = (props) => {
     };
 
     const handleChange =
-        <Key extends keyof UpdateTask>(key: Key) =>
+        <Key extends keyof Task>(key: Key) =>
         (value: Task[Key]) => {
             onChange({ id: task.id, [key]: value });
         };

@@ -40,7 +40,11 @@ function ProjectRoute() {
     });
 
     const handleSubmit = (data: Omit<Task, "id">) => {
-        createTask(data);
+        const dataToSend: UpdateTask = data;
+        if (tasks && tasks.length > 0) {
+            dataToSend.afterTaskId = tasks[tasks.length - 1].id;
+        }
+        createTask(dataToSend);
         setIsEditTaskOpen(false);
     };
 

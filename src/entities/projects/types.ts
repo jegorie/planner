@@ -4,7 +4,7 @@ export type Project = {
     isInbox: boolean;
     createdAt: string;
     updatedAt: string;
-    members: ProjectMember[];
+    // members: ProjectMember[];
 };
 
 export type ProjectMember = {
