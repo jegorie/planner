@@ -13,6 +13,7 @@ import {
 } from "../model/filter-atoms";
 import { FilterSelect, type FilterOption } from "./filter-select";
 import { FilterDatePicker } from "./filter-date-picker";
+import { Separator } from "@/shared/ui/separator";
 import { Input } from "@/shared/ui/input";
 import { ListFilterPlusIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/shared/ui/button";
@@ -155,18 +156,23 @@ export const TasksFilter: React.FC<Props> = (props) => {
             >
                 <FadeCard triggerKey={isOpen.toString()} duration={0.3}>
                     {isOpen ? (
-                        <div className="flex items-center py-4 px-4 flex-wrap gap-10">
-                            <div className="flex items-center flex-wrap gap-3 flex-7/12">
-                                {filterConfigs.slice(0, 2).map((config) => (
-                                    <FilterSelect
-                                        key={config.label}
-                                        label={config.label}
-                                        value={config.value}
-                                        onValueChange={config.onValueChange}
-                                        options={config.options}
-                                        placeholder={config.placeholder}
-                                    />
-                                ))}
+                        <div className="flex flex-col md:flex-row items-stretch gap-4 p-4">
+                            <div className="flex flex-col gap-2 flex-1 min-w-0">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                                    Filters
+                                </span>
+                                <div className="flex flex-wrap gap-3">
+                                    {filterConfigs.slice(0, 2).map((config) => (
+                                        <FilterSelect
+                                            key={config.label}
+                                            label={config.label}
+                                            value={config.value}
+                                            onValueChange={config.onValueChange}
+                                            options={config.options}
+                                            placeholder={config.placeholder}
+                                        />
+                                    ))}
+                                </div>
                                 <FilterDatePicker
                                     label="Date"
                                     value={selectedDate}
@@ -174,17 +180,30 @@ export const TasksFilter: React.FC<Props> = (props) => {
                                     placeholder="All dates"
                                 />
                             </div>
-                            <div className="flex items-center flex-wrap gap-3 flex-4/12">
-                                {filterConfigs.slice(2).map((config) => (
-                                    <FilterSelect
-                                        key={config.label}
-                                        label={config.label}
-                                        value={config.value}
-                                        onValueChange={config.onValueChange}
-                                        options={config.options}
-                                        placeholder={config.placeholder}
-                                    />
-                                ))}
+                            <Separator
+                                orientation="vertical"
+                                className="hidden md:block self-stretch h-auto"
+                            />
+                            <Separator
+                                orientation="horizontal"
+                                className="md:hidden"
+                            />
+                            <div className="flex flex-col gap-2 md:w-56">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground px-1">
+                                    Sort
+                                </span>
+                                <div className="flex flex-wrap gap-3">
+                                    {filterConfigs.slice(2).map((config) => (
+                                        <FilterSelect
+                                            key={config.label}
+                                            label={config.label}
+                                            value={config.value}
+                                            onValueChange={config.onValueChange}
+                                            options={config.options}
+                                            placeholder={config.placeholder}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     ) : (
