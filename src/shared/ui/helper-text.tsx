@@ -10,7 +10,7 @@ export const HelperText: React.FC<Props> = (props) => {
     const { title, error } = props;
     return (
         <div
-            className={cn("text-sm min-h-5", {
+            className={cn("text-sm", {
                 "text-destructive": error,
             })}
         >
@@ -19,9 +19,10 @@ export const HelperText: React.FC<Props> = (props) => {
                     <motion.span
                         initial={{
                             opacity: 0,
+                            height: 0,
                         }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.1 }}
                     >
                         {title}

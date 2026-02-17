@@ -3,15 +3,24 @@ import { Input } from "@/shared/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
-import { SignupSchema } from "../utils/schema";
+import { type Signup, SignupSchema } from "../utils/schema";
 import { HelperText } from "@/shared/ui/helper-text";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "@/shared/lib/api";
+import { HTTPError } from "ky";
 
-export const SignupForm = () => {
+type Props = {
+    onSuccess: () => void;
+};
+
+export const SignupForm: React.FC<Props> = (props) => {
+    const { onSuccess } = props;
     const {
         register,
         handleSubmit,
+        setError,
         formState: { errors },
-    } = useForm({
+    } = useForm<Signup>({
         defaultValues: {
             email: "",
             nickname: "",
@@ -22,12 +31,29 @@ export const SignupForm = () => {
         mode: "onChange",
         reValidateMode: "onChange",
     });
+    const { mutate, isPending } = useMutation({
+        mutationFn: (data: Signup) => {
+            return api
+                .post<{ accessToken: string }>("auth/register", {
+                    json: data,
+                })
+                .json();
+        },
+        onSuccess,
+        onError: async (error) => {
+            if (error instanceof HTTPError && error.response.status === 409) {
+                setError("email", { message: "Email is already taken" });
+            } else {
+                setError("root", { message: "Something went wrong. Please try again." });
+            }
+        },
+    });
 
     return (
         <form
-            className="grid gap-2"
+            className="grid gap-4"
             onSubmit={handleSubmit((data) => {
-                console.log(data);
+                mutate(data);
             })}
         >
             <div className="grid gap-1">
@@ -58,9 +84,10 @@ export const SignupForm = () => {
                 />
                 <HelperText title={errors.repeatPassword?.message} error />
             </div>
-            <Button type="submit" className="mt-2">
+            <Button type="submit" className="mt-2" disabled={isPending}>
                 Sign Up
             </Button>
+            <HelperText title={errors.root?.message} error />
             <div className="text-center text-sm">
                 Have an account?{" "}
                 <Link

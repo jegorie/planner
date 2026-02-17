@@ -74,7 +74,7 @@ export const AuthCard: React.FC = () => {
                         {type === "signin" ? (
                             <SigninForm onSuccess={goToMainPage} />
                         ) : (
-                            <SignupForm />
+                            <SignupForm onSuccess={goToMainPage} />
                         )}
                     </FadeCard>
                 </CardContent>
