@@ -27,7 +27,7 @@ export const FilterSelect = ({
     placeholder,
 }: FilterSelectProps) => {
     return (
-        <div className="flex-1">
+        <div className="flex-1 min-w-[224px]">
             <span className="text-sm font-medium text-primary/50">{label}</span>
             <Select value={value} onValueChange={onValueChange}>
                 <SelectTrigger
