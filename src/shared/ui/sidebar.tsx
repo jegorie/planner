@@ -165,7 +165,16 @@ function Sidebar({
     variant?: "sidebar" | "floating" | "inset";
     collapsible?: "offcanvas" | "icon" | "none";
 }) {
-    const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+    const { isMobile, state, openMobile, setOpenMobile, setOpen } =
+        useSidebar();
+
+    React.useEffect(
+        () => () => {
+            setOpen(false);
+            document.body.style.removeProperty("pointer-events");
+        },
+        [setOpen],
+    );
 
     if (collapsible === "none") {
         return (

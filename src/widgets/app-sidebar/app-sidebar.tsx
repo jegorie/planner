@@ -1,16 +1,17 @@
 import { CalendarDaysIcon, InboxIcon, StarIcon, TagIcon } from "lucide-react";
 
 import { AppSwitcher } from "./app-switcher";
+import { ProfileButton } from "./profile-button";
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarHeader,
     SidebarRail,
 } from "@/shared/ui/sidebar";
 import { cn } from "@/shared/lib/utils";
 import { type ReactNode, useMemo } from "react";
-import { ModeToggle } from "@/shared/ui/mode-toggle";
 import { Link, useParams } from "@tanstack/react-router";
 import { ProjectsList } from "@/widgets/projects-sidebar/ui/projects-list";
 import { useProjectsSync } from "@/entities/projects/hooks/use-projects-sync";
@@ -109,9 +110,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         />
                     ))}
                 </SidebarGroup>
-                <ModeToggle />
                 <ProjectsList />
             </SidebarContent>
+            <SidebarFooter>
+                <ProfileButton />
+            </SidebarFooter>
             <SidebarRail />
         </Sidebar>
     );
