@@ -170,10 +170,11 @@ function Sidebar({
 
     React.useEffect(
         () => () => {
-            setOpen(false);
-            document.body.style.removeProperty("pointer-events");
+            if (state === "expanded") {
+                setOpen(false);
+            }
         },
-        [setOpen],
+        [setOpen, state],
     );
 
     if (collapsible === "none") {
